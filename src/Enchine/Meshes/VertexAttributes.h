@@ -12,7 +12,7 @@ namespace Enchine {
 
     //TODO: Use this class?
 
-    class Attributes
+    /*class VertexAttributes
     {
         static const int ATTRIBUTE_COUNT = 8;
 
@@ -28,6 +28,6 @@ namespace Enchine {
             uvs = 2,
             skin = 3
         };
-    };
+    };*/
 
 }

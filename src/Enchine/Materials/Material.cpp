@@ -14,9 +14,12 @@ namespace Enchine {
 
     void Material::use() {
         m_program->use();
+
+        /* TODO: Remove
         m_program->set_matrix("transform", glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)));
         m_texture->bind(2);
         m_program->set_int("ourTexture3", 2);
+        */
     }
 
     void Material::set_bool(std::string name, bool value) {
@@ -32,7 +35,8 @@ namespace Enchine {
     }
 
     void Material::set_texture(std::string name, Texture2D *value, unsigned int unit) {
-        m_uniforms[name].value = value;
+        m_sampler_uniforms[name].unit = unit;
+        m_sampler_uniforms[name].texture = value;
 
         if (m_program)
         {

@@ -18,7 +18,11 @@ namespace Enchine {
 
     class Material {
         ShaderProgram *m_program;
-        Texture2D *m_texture;
+
+
+    public: Texture2D *m_texture; // TODO: Remove
+
+    private:
 
         std::map<std::string, UniformValue> m_uniforms;
         std::map<std::string, UniformValueSampler> m_sampler_uniforms;
@@ -41,6 +45,10 @@ namespace Enchine {
         std::map<std::string, UniformValueSampler>& get_sampler_uniforms();
 
         void use(); // TODO: Remove?
+
+    public: // Getters and setters
+        ShaderProgram *get_program() const { return m_program; }
+
 
     };
 

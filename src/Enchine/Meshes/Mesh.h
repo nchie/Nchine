@@ -24,6 +24,9 @@ namespace Enchine {
     private:
         std::bitset<ATTRIBUTE_COUNT> m_attribute_data;
         unsigned int m_vao;
+        unsigned int m_vbo;
+        unsigned int m_ebo;
+
         unsigned int m_vertice_count;
         unsigned int m_indice_count;
 
@@ -50,8 +53,14 @@ namespace Enchine {
 
     private:
         void generate(const std::vector<float> &vertice_data, const std::vector<int> &indices);
-
         int get_stride() const;
+
+    public: //Getters and setters
+        unsigned int get_vao() const { return m_vao; }
+        unsigned int get_vbo() const { return m_vbo; }
+        unsigned int get_ebo() const { return m_ebo; }
+        unsigned int get_vertice_count() const { return m_vertice_count; } // TODO: Make object hold actual vertices and make this one return .size() of that vector?
+        unsigned int get_indice_count() const { return m_indice_count; } // TODO: Make object hold actual indices and make this one return .size() of that vector?
     };
 
 

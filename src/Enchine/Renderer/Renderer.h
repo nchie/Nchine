@@ -23,6 +23,7 @@ namespace Enchine {
 
         std::vector<RenderCommand> m_render_commands; //TODO: Need more than one buffer? Create separate class?
 
+        void render_command(const RenderCommand* command /*TODO: Camera */);
 
     public:
         Renderer();
