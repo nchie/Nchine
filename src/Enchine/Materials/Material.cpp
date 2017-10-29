@@ -7,19 +7,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Enchine {
-    Material::Material(ShaderProgram *program, Texture2D *texture) : m_program(program),
-                                                                     m_texture(texture) {
+    Material::Material(ShaderProgram *program) : m_program(program){
 
     }
 
     void Material::use() {
         m_program->use();
-
-        /* TODO: Remove
-        m_program->set_matrix("transform", glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)));
-        m_texture->bind(2);
-        m_program->set_int("ourTexture3", 2);
-        */
     }
 
     void Material::set_bool(std::string name, bool value) {

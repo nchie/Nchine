@@ -28,11 +28,11 @@ namespace Enchine {
         check_compile_errors(fragment_handle, "FRAGMENT");
 
         // shader program creation
-        m_shader_id = glCreateProgram();
-        glAttachShader(m_shader_id, vertex_handle);
-        glAttachShader(m_shader_id, fragment_handle);
-        glLinkProgram(m_shader_id);
-        check_compile_errors(m_shader_id, "PROGRAM");
+        m_id = glCreateProgram();
+        glAttachShader(m_id, vertex_handle);
+        glAttachShader(m_id, fragment_handle);
+        glLinkProgram(m_id);
+        check_compile_errors(m_id, "PROGRAM");
 
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex_handle);
@@ -40,66 +40,87 @@ namespace Enchine {
 
     }
 
-    ShaderProgram::~ShaderProgram() {
-        // TODO: Delete shader program?
+    ShaderProgram::~ShaderProgram()
+    {
+        // If id is a valid shader id, delete it (if it isn't, it has been moved)
+        if(m_id != 0) {
+            glDeleteProgram(m_id);
+            m_id = 0;
+        }
+    }
+
+    ShaderProgram::ShaderProgram(ShaderProgram &&other) noexcept{
+        this->m_id              = other.m_id;;
+
+        // Invalidate old shader's id
+        other.m_id = 0;
+    }
+
+    ShaderProgram &ShaderProgram::operator=(ShaderProgram &&other) noexcept{
+        this->m_id              = other.m_id;;
+
+        // Invalidate old shader's id
+        other.m_id = 0;
+
+        return *this;
     }
 
 
     void ShaderProgram::use() {
-        glUseProgram(m_shader_id);
+        glUseProgram(m_id);
     }
 
     void ShaderProgram::set_bool(const std::string &name, bool value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform1i(loc, value);
     }
 
     void ShaderProgram::set_int(const std::string &name, int value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform1i(loc, value);
     }
 
     void ShaderProgram::set_float(const std::string &name, float value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform1f(loc, value);
     }
 
     void ShaderProgram::set_vector(const std::string &name, const glm::vec2 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform2fv(loc, 1, glm::value_ptr(value));
     }
 
     void ShaderProgram::set_vector(const std::string &name, const glm::vec3 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform3fv(loc, 1, glm::value_ptr(value));
     }
 
     void ShaderProgram::set_vector(const std::string &name, const glm::vec4 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniform4fv(loc, 1, glm::value_ptr(value));
     }
 
 
     void ShaderProgram::set_matrix(const std::string &name, const glm::mat2 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniformMatrix2fv(loc, 1, GL_FALSE, glm::value_ptr(value));
     }
 
     void ShaderProgram::set_matrix(const std::string &name, const glm::mat3 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(value));
     }
 
     void ShaderProgram::set_matrix(const std::string &name, const glm::mat4 &value) const {
-        int loc = glGetUniformLocation(m_shader_id, name.c_str());
+        int loc = glGetUniformLocation(m_id, name.c_str());
         if (loc >= 0)
             glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
     }

@@ -19,15 +19,12 @@ namespace Enchine {
     class Material {
         ShaderProgram *m_program;
 
-
-    public: Texture2D *m_texture; // TODO: Remove
-
     private:
 
         std::map<std::string, UniformValue> m_uniforms;
         std::map<std::string, UniformValueSampler> m_sampler_uniforms;
     public:
-        Material(ShaderProgram *program, Texture2D *texture);
+        Material(ShaderProgram *program);
 
 
         void set_bool(std::string name, bool value);

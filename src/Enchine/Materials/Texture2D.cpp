@@ -24,6 +24,53 @@ namespace Enchine {
         generate(data, width, height, internal_format, format, type);
     }
 
+    Texture2D::~Texture2D()
+    {
+        // If id is a valid texture id, delete it (if it isn't, it has been moved)
+        if(m_id != 0) {
+            glDeleteTextures(1, &m_id);
+            m_id = 0;
+        }
+    }
+
+    Texture2D::Texture2D(Texture2D &&other) noexcept{
+        this->m_id              = other.m_id;;
+        this->m_width           = other.m_width;
+        this->m_height          = other.m_height;
+        this->m_internal_format = other.m_internal_format;
+        this->m_format          = other.m_format;
+        this->m_type            = other.m_type;
+
+        this->m_mipmapping      = other.m_mipmapping;
+        this->m_filter_min      = other.m_filter_min;
+        this->m_filter_max      = other.m_filter_max;
+        this->m_wrap_s          = other.m_wrap_s;
+        this->m_wrap_t          = other.m_wrap_t;
+
+        // Invalidate old texture's id
+        other.m_id = 0;
+    }
+
+    Texture2D &Texture2D::operator=(Texture2D &&other) noexcept{
+        this->m_id              = other.m_id;;
+        this->m_width           = other.m_width;
+        this->m_height          = other.m_height;
+        this->m_internal_format = other.m_internal_format;
+        this->m_format          = other.m_format;
+        this->m_type            = other.m_type;
+
+        this->m_mipmapping      = other.m_mipmapping;
+        this->m_filter_min      = other.m_filter_min;
+        this->m_filter_max      = other.m_filter_max;
+        this->m_wrap_s          = other.m_wrap_s;
+        this->m_wrap_t          = other.m_wrap_t;
+
+        // Invalidate old texture's id
+        other.m_id = 0;
+
+        return *this;
+    }
+
     void Texture2D::generate(std::byte *data, int width, int height, GLenum internal_format, GLenum format, GLenum type) {
         bind();
         // load image, create texture and generate mipmaps
@@ -50,8 +97,5 @@ namespace Enchine {
     {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-
-
 
 }

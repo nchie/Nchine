@@ -18,6 +18,7 @@ Engine::Engine(std::string title, int window_width, int window_height) :  m_wind
 Engine::~Engine() {
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+    m_renderer.release(); // If renderer stays alive longer than glfwTerminate, render will try to deallocate GL objects after glfw have terminated = SIGSEGV!
     glfwTerminate();
 }
 

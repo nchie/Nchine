@@ -6,8 +6,8 @@
 
 #include <glad/glad.h>
 
-#define STB_IMAGE_IMPLEMENTATION // TODO: Remove
-#include <stb_image.h> // TODO: Remove
+//#define STB_IMAGE_IMPLEMENTATION // TODO: Remove
+//#include <stb_image.h> // TODO: Remove
 #include <glm/gtc/matrix_transform.hpp>
 #include <variant>
 
@@ -43,65 +43,19 @@ namespace Enchine {
             "in vec2 TexCoord;\n"
             "uniform sampler2D texture1;\n"
             "uniform sampler2D texture2;\n"
+            "uniform vec3 color;\n"
             "void main()\n"
             "{\n"
-            "   FragColor = texture(texture1, TexCoord) * texture(texture2, TexCoord);\n"
+            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.8) * vec4(color, 0.2);\n"
             "}\n\0";
 
     Renderer::Renderer() {
-        std::vector<float> vertices = {
-                0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  // top right
-                0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // bottom left
-                -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  // top left
-        };
 
-        std::vector<glm::vec3> vertex_positions = {
-                {0.5f,  0.5f,  0.0f},
-                {0.5f,  -0.5f, 0.0f},
-                {-0.5f, -0.5f, 0.0f},
-                {-0.5f, 0.5f,  0.0f}
-        };
+        resource_lib.dummy_load();
 
-
-        std::vector<glm::vec2> texcoords = {
-                {1.0f, 1.0f},  // top right
-                {1.0f, 0.0f},  // bottom right
-                {0.0f, 0.0f},  // bottom left
-                {0.0f, 1.0f}  // top left
-        };
-
-        std::vector<int> indices = {  // note that we start from 0!
-                0, 1, 3,  // first Triangle
-                1, 2, 3   // second Triangle
-        };
-
-
-        stbi_set_flip_vertically_on_load(true);
-
-        int width, height, nr_channels;
-        unsigned char *data1 = stbi_load("resources/textures/awesomeface.png", &width, &height, &nr_channels, 0);
-
-        temp_meshes.emplace_back(vertex_positions, texcoords, indices);
-        temp_shaders.emplace_back(vertexShaderSource, fragmentShaderSource);
-        temp_textures.emplace_back(reinterpret_cast<std::byte *>(data1), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
-
-        unsigned char *data2 = stbi_load("resources/textures/container2.png", &width, &height, &nr_channels, 0);
-
-        temp_textures.emplace_back(reinterpret_cast<std::byte *>(data2), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
-
-        Material &material = temp_materials.emplace_back(&temp_shaders[0], &temp_textures[0]);
-
-        //material.set_matrix("transform", glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)));
-
-        stbi_image_free(data1);
-        stbi_image_free(data2);
+        temp_materials.emplace_back(&(*resource_lib.get_shader("DummyShader")));
     }
 
-    Renderer::~Renderer()
-    {
-
-    }
 
     void Renderer::render_command(const RenderCommand *command)
     {
@@ -152,13 +106,15 @@ namespace Enchine {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        temp_materials[0].set_texture("texture1", &temp_textures[0], 0);
-        temp_materials[0].set_texture("texture2", &temp_textures[1], 1);
+        temp_materials[0].set_texture("texture1", &(*resource_lib.get_texture("AwesomeFace")), 0);
+        temp_materials[0].set_texture("texture2", &(*resource_lib.get_texture("Container2")), 1);
+        temp_materials[0].set_vector("color", glm::vec3(0.0f, 1.0f, 0.0f));
+
 
         m_render_commands.emplace_back(RenderCommand {
                 glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)),
                 glm::mat4(1.0f), //?
-                &temp_meshes[0],
+                &(*resource_lib.get_mesh("Square")),
                 &temp_materials[0],
                 glm::vec3(1.0f),
                 glm::vec3(1.0f)
@@ -169,12 +125,6 @@ namespace Enchine {
         {
             render_command(&command);
         }
-
-        //temp_materials[0].use();
-        //for (const auto &mesh : temp_meshes)
-        //    mesh.draw();
-
-
     }
 
 }

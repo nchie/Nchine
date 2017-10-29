@@ -23,9 +23,9 @@ namespace Enchine {
 
     private:
         std::bitset<ATTRIBUTE_COUNT> m_attribute_data;
-        unsigned int m_vao;
-        unsigned int m_vbo;
-        unsigned int m_ebo;
+        unsigned int m_vao = 0;
+        unsigned int m_vbo = 0;
+        unsigned int m_ebo = 0;
 
         unsigned int m_vertice_count;
         unsigned int m_indice_count;
@@ -40,6 +40,16 @@ namespace Enchine {
 
         Mesh(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
              const std::vector<glm::vec3> &normals, const std::vector<int> &indices);
+
+        ~Mesh();
+
+        // Copy constructors: deleted
+        Mesh& operator=(const Mesh& other) = delete;
+        Mesh(const Mesh& other) = delete;
+
+        // Move constructors
+        Mesh(Mesh&& other) noexcept;
+        Mesh& operator=(Mesh&& other) noexcept;
 
         enum flags {
             none = 0,

@@ -14,25 +14,6 @@ namespace Enchine {
         generate(vertice_data, indices);
     }
 
-    int Mesh::get_stride() const {
-        int stride = 3 * sizeof(float); // Vertices are always needed for a mesh!
-
-        std::string test = m_attribute_data.to_string();
-
-        stride += m_attribute_data[NORMALS_BIT] * 3 * sizeof(float); // Normals size per vertex
-        stride += m_attribute_data[COLORS_BIT] * 3 * sizeof(float); // Color size per vertex
-        stride += m_attribute_data[TEXCOORDS_BIT] * 2 * sizeof(float); // TexCoords size per vertex
-        stride += m_attribute_data[SKIN_BIT] * 8 * sizeof(int); // Skin size per vertex TODO: Fix
-
-
-        return stride;
-    }
-
-    void Mesh::draw() const {
-        glBindVertexArray(m_vao);
-        glDrawElements(GL_TRIANGLES, m_indice_count, GL_UNSIGNED_INT, 0);
-    }
-
     Mesh::Mesh(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices) {
         // Mesh with only vertices
         m_attribute_data = flags::none;
@@ -101,19 +82,61 @@ namespace Enchine {
 
     }
 
+    Mesh::~Mesh()
+    {
+        // If ids are still valid, delete them (if they haven't, they have been moved)
+
+        if(m_vao != 0) {
+            glDeleteVertexArrays(1, &m_vao);
+            m_vao = 0;
+        }
+        if(m_vbo != 0) {
+            glDeleteBuffers(1, &m_vbo);
+            m_vbo = 0;
+        }
+        if(m_ebo != 0) {
+            glDeleteBuffers(1, &m_ebo);
+            m_ebo = 0;
+        }
+    }
+
+    Mesh::Mesh(Mesh &&other) noexcept{
+        this->m_vao   = other.m_vao;
+        this->m_vbo   = other.m_vbo;
+        this->m_ebo   = other.m_ebo;
+
+        // Invalidate old mesh's ids
+        other.m_vao = 0;
+        other.m_vbo = 0;
+        other.m_ebo = 0;
+    }
+
+    Mesh &Mesh::operator=(Mesh &&other) noexcept{
+        this->m_vao   = other.m_vao;
+        this->m_vbo   = other.m_vbo;
+        this->m_ebo   = other.m_ebo;
+
+        // Invalidate old mesh's ids
+        other.m_vao = 0;
+        other.m_vbo = 0;
+        other.m_ebo = 0;
+
+        return *this;
+    }
+
+
     void Mesh::generate(const std::vector<float> &vertice_data, const std::vector<int> &indices) {
-        unsigned int VBO, VAO, EBO;
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
+        glGenVertexArrays(1, &m_vao);
+        glGenBuffers(1, &m_vbo);
+        glGenBuffers(1, &m_ebo);
 
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray(VAO);
+        glBindVertexArray(m_vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferData(GL_ARRAY_BUFFER, vertice_data.size() * sizeof(float), vertice_data.data(), GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(float), indices.data(), GL_STATIC_DRAW);
 
         int stride = get_stride();
@@ -150,12 +173,29 @@ namespace Enchine {
             offset += (3 * sizeof(float));
         }
 
-        // Save VAO
-        m_vao = VAO;
         m_vertice_count = static_cast<unsigned int>(vertice_data.size() / stride);
         m_indice_count = static_cast<unsigned int>(indices.size());
 
         // Unbind TODO: Not necessary
         glBindVertexArray(0);
+    }
+
+    int Mesh::get_stride() const {
+        int stride = 3 * sizeof(float); // Vertices are always needed for a mesh!
+
+        std::string test = m_attribute_data.to_string();
+
+        stride += m_attribute_data[NORMALS_BIT] * 3 * sizeof(float); // Normals size per vertex
+        stride += m_attribute_data[COLORS_BIT] * 3 * sizeof(float); // Color size per vertex
+        stride += m_attribute_data[TEXCOORDS_BIT] * 2 * sizeof(float); // TexCoords size per vertex
+        stride += m_attribute_data[SKIN_BIT] * 8 * sizeof(int); // Skin size per vertex TODO: Fix
+
+
+        return stride;
+    }
+
+    void Mesh::draw() const {
+        glBindVertexArray(m_vao);
+        glDrawElements(GL_TRIANGLES, m_indice_count, GL_UNSIGNED_INT, 0);
     }
 }

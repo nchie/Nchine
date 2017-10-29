@@ -11,7 +11,7 @@
 namespace Enchine {
     class Texture2D {
     private:
-        unsigned int m_id;
+        unsigned int m_id        = 0;
         int m_width              = 0;
         int m_height             = 0;
         GLenum m_internal_format = GL_RGBA;
@@ -27,6 +27,15 @@ namespace Enchine {
     public:
         Texture2D();
         Texture2D(std::byte* data, int width, int height, GLenum internal_format, GLenum format, GLenum type);
+        ~Texture2D();
+
+        // Copy constructors: deleted
+        Texture2D& operator=(const Texture2D& other) = delete;
+        Texture2D(const Texture2D& other) = delete;
+
+        // Move constructors
+        Texture2D(Texture2D&& other) noexcept;
+        Texture2D& operator=(Texture2D&& other) noexcept;
 
         void generate(std::byte* data, int width, int height, GLenum internal_format, GLenum format, GLenum type);
 

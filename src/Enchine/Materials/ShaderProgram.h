@@ -12,11 +12,18 @@
 namespace Enchine {
     class ShaderProgram {
     private:
-        unsigned int m_shader_id;
+        unsigned int m_id = 0;
     public:
         ShaderProgram(const std::string &vs_code, const std::string &fs_code);
+         ~ShaderProgram();
 
-        virtual ~ShaderProgram();
+        // Copy constructors: deleted
+        ShaderProgram& operator=(const ShaderProgram& other) = delete;
+        ShaderProgram(const ShaderProgram& other) = delete;
+
+        // Move constructors
+        ShaderProgram(ShaderProgram&& other) noexcept;
+        ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
         void use();
 
