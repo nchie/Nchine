@@ -27,6 +27,8 @@ namespace Enchine {
 
         void use();
 
+        unsigned int get_id() const { return m_id; }
+
         void set_bool(const std::string &name, bool value) const;
 
         void set_int(const std::string &name, int value) const;

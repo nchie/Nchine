@@ -7,8 +7,9 @@
 
 #include "ResourceLibrary.h"
 
+// TODO: Ta bort
 void Enchine::ResourceLibrary::dummy_load() {
-    // TODO: Ta bort
+
     const char *vertexShaderSource = "#version 330 core\n"
             "layout (location = 0) in vec3 aPos;\n"
             //"layout (location = 1) in vec3 aColor;\n"
@@ -34,7 +35,7 @@ void Enchine::ResourceLibrary::dummy_load() {
             "uniform vec3 color;\n"
             "void main()\n"
             "{\n"
-            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.8) * vec4(color, 0.2);\n"
+            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.95) * vec4(color, 0.2);\n"
             "}\n\0";
 
     std::vector<float> vertices = {

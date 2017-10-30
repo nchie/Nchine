@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Resource.h"
 
 #include <string>
 #include <map>
@@ -15,8 +14,90 @@
 
 namespace Enchine {
 
+
     template<typename T>
-    class Cache {
+    class ResourceCache;
+
+    template<typename T>
+    class Resource {
+        friend class ResourceCache<T>;
+
+    private:
+        unsigned int m_id;
+        ResourceCache<T> *m_cache;
+        bool m_active;
+
+        Resource(ResourceCache<T> *cache, unsigned int id) : m_cache(cache),
+                                                     m_id(id),
+                                                     m_active(true) {
+            m_cache->m_objects[m_id].references++;
+        }
+
+    public:
+        ~Resource() {
+            m_cache->m_objects[m_id].references--;
+        }
+
+        // Copy constructor
+        Resource(const Resource<T> &other) : m_cache(other.m_cache),
+                                             m_id(other.m_id),
+                                             m_active(true) {
+            this->m_cache->m_objects[m_id].references++;
+        }
+
+        // Move constructor
+        Resource(Resource &&other) noexcept : m_cache(other.m_cache),
+                                              m_id(other.m_id),
+                                              m_active(true) {
+            other.m_active = false;
+        }
+
+        // Copy assignment
+        Resource &operator=(const Resource& other) {
+            this->m_id = other.m_id;
+            this->m_cache = other.m_cache;
+            this->m_cache->m_objects[m_id].references++;
+            this->m_active = true;
+
+            return *this;
+        }
+
+        // Move assignment
+        Resource &operator=(Resource &&other) noexcept {
+            this->m_id = other.m_id;
+            this->m_cache = other.m_cache;
+            this->m_active = true;
+            other.m_active = false;
+
+            return *this;
+        }
+
+        T &operator*() {
+            return m_cache->get_resource(m_id);
+        }
+
+        T *operator->() {
+            return &m_cache->get_resource(m_id);
+        }
+
+        bool is_valid() const noexcept {
+            return m_active && m_cache->contains(m_id);
+        }
+
+        unsigned int reference_count() {
+            return this->m_cache->m_objects[m_id].references;
+        }
+
+        explicit operator bool() const noexcept {
+            return m_cache->contains(m_id);
+        }
+
+    };
+
+
+
+    template<typename T>
+    class ResourceCache {
         friend class Resource<T>;
 
         struct EntryData {
@@ -36,10 +117,9 @@ namespace Enchine {
         std::function<void(const std::string &)> m_notify_missing_resource;
 
     public:
-        Cache(std::function<void(const std::string &)> &&notify_missing_resource) : m_notify_missing_resource(
-                notify_missing_resource) {}
+        ResourceCache(std::function<void(const std::string &)> &&notify_missing_resource) : m_notify_missing_resource(notify_missing_resource) {}
 
-        ~Cache() = default;
+        ~ResourceCache() = default;
 
         void set_default(T &&default_object)
         /*TODO: requires !std::is_lvalue_reference<T>::value*/
@@ -73,7 +153,7 @@ namespace Enchine {
                 }
 
                 // Return resource handle (even though it might not be loaded)
-                return Resource<T>(*this, id);
+                return Resource<T>(this, id);
             } else {
                 // Generate new id
                 auto id = static_cast<unsigned int>(m_objects.size());
@@ -88,7 +168,7 @@ namespace Enchine {
                 m_notify_missing_resource(name);
 
                 // Return resource handle even though it's not yet loaded
-                return Resource<T>(*this, id);
+                return Resource<T>(this, id);
             }
         }
 

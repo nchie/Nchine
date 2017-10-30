@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Enchine {
-    Material::Material(ShaderProgram *program) : m_program(program){
+    Material::Material(const Resource<ShaderProgram>& program) : m_program(program){
 
     }
 
@@ -27,9 +27,8 @@ namespace Enchine {
         m_uniforms[name].value = value;
     }
 
-    void Material::set_texture(std::string name, Texture2D *value, unsigned int unit) {
-        m_sampler_uniforms[name].unit = unit;
-        m_sampler_uniforms[name].texture = value;
+    void Material::set_texture(std::string name, const Resource<Texture2D>& value, unsigned int unit) {
+        m_sampler_uniforms.emplace(name, UniformValueSampler {unit, value});
 
         if (m_program)
         {

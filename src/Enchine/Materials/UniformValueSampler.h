@@ -3,17 +3,17 @@
 //
 
 
+#include "../Resources/ResourceCache.h"
+#include "../Materials/Texture2D.h"
 
 namespace Enchine {
 
-    class Texture2D;
 
     struct UniformValueSampler
     {
         unsigned int unit;
-        Texture2D* texture;
+        Resource<Texture2D> texture;
 
     };
-
 
 }

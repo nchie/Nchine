@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Cache.h"
+#include "ResourceCache.h"
 #include "ResourceLoader.h"
 #include "../Materials/ShaderProgram.h"
 #include "../Materials/Texture2D.h"
@@ -25,9 +25,9 @@ namespace Enchine
     class ResourceLibrary {
 
     private:
-        Cache<ShaderProgram> m_shader_cache;
-        Cache<Texture2D>     m_texture_cache;
-        Cache<Mesh>          m_mesh_cache;
+        ResourceCache<ShaderProgram> m_shader_cache;
+        ResourceCache<Texture2D>     m_texture_cache;
+        ResourceCache<Mesh>          m_mesh_cache;
         ResourceLoader       m_resource_loader;
 
     public:
