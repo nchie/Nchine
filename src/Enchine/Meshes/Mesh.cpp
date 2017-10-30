@@ -105,6 +105,11 @@ namespace Enchine {
         this->m_vbo   = other.m_vbo;
         this->m_ebo   = other.m_ebo;
 
+        this->m_vertice_count   = other.m_vertice_count;
+        this->m_indice_count    = other.m_indice_count;
+
+
+
         // Invalidate old mesh's ids
         other.m_vao = 0;
         other.m_vbo = 0;
@@ -115,6 +120,9 @@ namespace Enchine {
         this->m_vao   = other.m_vao;
         this->m_vbo   = other.m_vbo;
         this->m_ebo   = other.m_ebo;
+
+        this->m_vertice_count   = other.m_vertice_count;
+        this->m_indice_count    = other.m_indice_count;
 
         // Invalidate old mesh's ids
         other.m_vao = 0;

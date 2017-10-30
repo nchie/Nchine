@@ -50,14 +50,14 @@ namespace Enchine {
     }
 
     ShaderProgram::ShaderProgram(ShaderProgram &&other) noexcept{
-        this->m_id              = other.m_id;;
+        this->m_id = other.m_id;;
 
         // Invalidate old shader's id
         other.m_id = 0;
     }
 
     ShaderProgram &ShaderProgram::operator=(ShaderProgram &&other) noexcept{
-        this->m_id              = other.m_id;;
+        this->m_id = other.m_id;;
 
         // Invalidate old shader's id
         other.m_id = 0;

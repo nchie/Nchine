@@ -35,7 +35,9 @@ namespace Enchine {
 
     public:
         ~Resource() {
-            m_cache->m_objects[m_id].references--;
+            if(m_active) {
+                m_cache->m_objects[m_id].references--;
+            }
         }
 
         // Copy constructor
@@ -54,6 +56,7 @@ namespace Enchine {
 
         // Copy assignment
         Resource &operator=(const Resource& other) {
+            // TODO: Restrict self assignment?
             this->m_id = other.m_id;
             this->m_cache = other.m_cache;
             this->m_cache->m_objects[m_id].references++;
@@ -64,6 +67,7 @@ namespace Enchine {
 
         // Move assignment
         Resource &operator=(Resource &&other) noexcept {
+            // TODO: Restrict self assignment?
             this->m_id = other.m_id;
             this->m_cache = other.m_cache;
             this->m_active = true;

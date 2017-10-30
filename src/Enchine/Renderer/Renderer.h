@@ -10,6 +10,7 @@
 #include "../Materials/Material.h" // TODO: Remove
 #include "../Materials/Texture2D.h" // TODO: Remove
 #include "../Resources/ResourceLibrary.h"
+#include "GLContext.h"
 
 #include "RenderCommand.h"
 
@@ -17,10 +18,9 @@ namespace Enchine {
 
     class Renderer {
     private:
-        std::vector<Mesh> temp_meshes; // TODO: Remove
-        std::vector<ShaderProgram> temp_shaders; // TODO: Remove
-        std::vector<Texture2D> temp_textures; // TODO: Remove
         std::vector<Material> temp_materials; // TODO: Remove
+
+        GLContext glcontext;
         ResourceLibrary resource_lib;
 
     private:

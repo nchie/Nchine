@@ -27,8 +27,8 @@ namespace Enchine {
         unsigned int m_vbo = 0;
         unsigned int m_ebo = 0;
 
-        unsigned int m_vertice_count;
-        unsigned int m_indice_count;
+        unsigned int m_vertice_count = 0;
+        unsigned int m_indice_count = 0;
 
     public:
         Mesh(const std::vector<float> &vertice_data, const std::vector<int> &indices,

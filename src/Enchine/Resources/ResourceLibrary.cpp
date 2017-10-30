@@ -38,6 +38,34 @@ void Enchine::ResourceLibrary::dummy_load() {
             "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.95) * vec4(color, 0.2);\n"
             "}\n\0";
 
+    const char *vertexShaderSource2 = "#version 330 core\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            //"layout (location = 1) in vec3 aColor;\n"
+            "layout (location = 1) in vec2 aTexCoord;\n"
+            "\n"
+            //"out vec3 ourColor;\n"
+            "out vec2 TexCoord;\n"
+            "\n"
+            "uniform mat4 transform;\n"
+            "\n"
+            "void main()\n"
+            "{\n"
+            "   gl_Position =  transform * vec4(aPos, 1.0);\n"
+            //"   ourColor = aColor;\n"
+            "   TexCoord = aTexCoord;\n"
+            "}\0";
+    const char *fragmentShaderSource2 = "#version 330 core\n"
+            "out vec4 FragColor;\n"
+            //"in vec3 ourColor;\n"
+            "in vec2 TexCoord;\n"
+            "uniform sampler2D texture1;\n"
+            "uniform sampler2D texture2;\n"
+            "uniform vec3 color;\n"
+            "void main()\n"
+            "{\n"
+            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.05) * vec4(color, 0.2);\n"
+            "}\n\0";
+
     std::vector<float> vertices = {
             0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  // top right
             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
@@ -68,13 +96,15 @@ void Enchine::ResourceLibrary::dummy_load() {
 
     int width, height, nr_channels;
 
+    m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSource2, fragmentShaderSource2));
     m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSource, fragmentShaderSource));
+
     m_mesh_cache.load("Square", Mesh(vertex_positions, texcoords, indices));
     unsigned char *data1 = stbi_load("resources/textures/awesomeface.png", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("AwesomeFace", Texture2D(reinterpret_cast<std::byte *>(data1), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
+    m_texture_cache.load("AwesomeFace", Texture2D(reinterpret_cast<std::byte*>(data1), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
 
     unsigned char *data2 = stbi_load("resources/textures/container2.png", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("Container2", Texture2D(reinterpret_cast<std::byte *>(data2), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
+    m_texture_cache.load("Container2", Texture2D(reinterpret_cast<std::byte*>(data2), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
 
     stbi_image_free(data1);
     stbi_image_free(data2);

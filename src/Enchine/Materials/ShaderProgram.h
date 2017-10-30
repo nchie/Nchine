@@ -13,6 +13,7 @@ namespace Enchine {
     class ShaderProgram {
     private:
         unsigned int m_id = 0;
+
     public:
         ShaderProgram(const std::string &vs_code, const std::string &fs_code);
          ~ShaderProgram();
