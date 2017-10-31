@@ -176,7 +176,7 @@ namespace Enchine {
             }
         }
 
-        void load(std::string name, T &&resource)
+        Resource<T> load(std::string name, T &&resource)
         /*TODO: requires !std::is_lvalue_reference<T>::value*/
         {
             auto resource_entry = m_indexmapping.find(name);
@@ -184,10 +184,12 @@ namespace Enchine {
                 // Name exists
                 unsigned int id = resource_entry->second;
                 m_objects[id].resource = std::move(resource); // TODO: Is move necessary?
+                return Resource<T>(this, id);
             } else {
                 auto id = static_cast<unsigned int>(m_objects.size());
                 m_indexmapping.emplace(name, id);
                 m_objects.emplace_back(std::move(resource));  // TODO: Is move necessary?
+                return Resource<T>(this, id);
             }
         }
 

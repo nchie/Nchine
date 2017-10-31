@@ -21,7 +21,7 @@ namespace Enchine {
 
     public:
         void use_program(const ShaderProgram& program);
-        void bind_texture(const Texture2D& texture, GLuint unit);
+        void bind_texture(unsigned int unit, const Texture2D& texture);
         void draw_mesh(const Mesh& mesh);
 
     };

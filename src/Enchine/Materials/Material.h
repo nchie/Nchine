@@ -32,7 +32,7 @@ namespace Enchine {
         void set_bool(std::string name, bool value);
         void set_int(std::string name, int value);
         void set_float(std::string name, float value);
-        void set_texture(std::string name, unsigned int unit, const Resource<Texture2D>& value);
+        void set_texture(std::string name, const Resource<Texture2D>& value);
         void set_vector(std::string name, glm::vec2 value);
         void set_vector(std::string name, glm::vec3 value);
         void set_vector(std::string name, glm::vec4 value);

@@ -4,18 +4,23 @@
 
 #pragma once
 
-#include <string>
-
 #include <glm/glm.hpp>
+
+#include <string>
+#include <vector>
+#include <initializer_list>
 
 
 namespace Enchine {
     class ShaderProgram {
+        const int MAX_SAMPLER_SLOTS = 16;
     private:
         unsigned int m_id = 0;
+        std::vector< std::string > m_sampler_slots;
 
     public:
         ShaderProgram(const std::string &vs_code, const std::string &fs_code);
+        ShaderProgram(const std::string &vs_code, const std::string &fs_code, std::initializer_list<std::string> sampler_names);
          ~ShaderProgram();
 
         // Copy constructors: deleted
@@ -26,7 +31,15 @@ namespace Enchine {
         ShaderProgram(ShaderProgram&& other) noexcept;
         ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
+        void generate(const std::string &vs_code, const std::string &fs_code);
+
         void use();
+
+        void add_sampler(const std::string& sampler_name);
+        void add_sampler(std::string&& sampler_name);
+        void add_samplers(std::initializer_list<std::string> sampler_names);
+        int get_sampler_slot(const std::string& sampler_name);
+
 
         unsigned int get_id() const { return m_id; }
 

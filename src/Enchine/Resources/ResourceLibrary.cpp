@@ -63,7 +63,7 @@ void Enchine::ResourceLibrary::dummy_load() {
             "uniform vec3 color;\n"
             "void main()\n"
             "{\n"
-            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.05) * vec4(color, 0.2);\n"
+            "   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.5) * vec4(color, 0.2);\n"
             "}\n\0";
 
     std::vector<float> vertices = {
@@ -96,8 +96,17 @@ void Enchine::ResourceLibrary::dummy_load() {
 
     int width, height, nr_channels;
 
-    m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSource2, fragmentShaderSource2));
-    m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSource, fragmentShaderSource));
+
+
+    auto dummy_shader = m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSource, fragmentShaderSource, {"texture1", "texture2"}));
+    //dummy_shader->use(); // Should this be necessary?
+    //dummy_shader->add_sampler("texture1");
+    //dummy_shader->add_sampler("texture2");
+
+    auto dummy_shader2 = m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSource2, fragmentShaderSource2, {"texture1", "texture2"}));
+    //dummy_shader2->use(); // Should this be necessary?
+    //dummy_shader2->add_sampler("texture1");
+    //dummy_shader2->add_sampler("texture2");
 
     m_mesh_cache.load("Square", Mesh(vertex_positions, texcoords, indices));
     unsigned char *data1 = stbi_load("resources/textures/awesomeface.png", &width, &height, &nr_channels, 0);

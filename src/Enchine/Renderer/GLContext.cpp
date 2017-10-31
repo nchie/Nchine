@@ -17,7 +17,7 @@ namespace Enchine {
         }
     }
 
-    void GLContext::bind_texture(const Texture2D &texture, GLuint unit) {
+    void GLContext::bind_texture(unsigned int unit, const Texture2D &texture) {
         if (unit >= 0) {
             glActiveTexture((unsigned int) GL_TEXTURE0 + unit);
             m_active_texture = unit;
@@ -29,7 +29,7 @@ namespace Enchine {
         if (m_active_vao != mesh.get_vao()) {
             glBindVertexArray(mesh.get_vao());
         }
-        glDrawElements(GL_TRIANGLES, mesh.get_indice_count(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, mesh.get_indice_count(), GL_UNSIGNED_INT, nullptr);
     }
 
 }

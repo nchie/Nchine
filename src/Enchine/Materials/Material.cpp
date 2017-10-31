@@ -27,14 +27,18 @@ namespace Enchine {
         m_uniforms[name].value = value;
     }
 
-    void Material::set_texture(std::string name, unsigned int unit, const Resource<Texture2D>& value)
+    void Material::set_texture(std::string name, const Resource<Texture2D>& value)
     {
         // TODO:
         // Program holds sampler slots (name -> slot) that are set during shader creation
         // This function should ask program which slot 'name' has, and (if it exists) input it into the UniformValueSampler
         // This way it's never necessary after shader creation to manually input slot (unit)
 
-        m_sampler_uniforms.emplace(name, UniformValueSampler {unit, value});
+        int slot = m_program->get_sampler_slot(name);
+
+        if(slot >= 0)
+            m_sampler_uniforms.emplace(name, UniformValueSampler {slot, value});
+
 
         /*if (m_program)
         {

@@ -19,13 +19,13 @@ namespace Enchine {
         resource_lib.dummy_load();
 
         Material &mat1 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader"));
-        mat1.set_texture("texture1", 0, resource_lib.get_texture("AwesomeFace"));
-        mat1.set_texture("texture2", 1, resource_lib.get_texture("Container2"));
+        mat1.set_texture("texture1", resource_lib.get_texture("AwesomeFace"));
+        mat1.set_texture("texture2", resource_lib.get_texture("Container2"));
         mat1.set_vector("color", glm::vec3(0.0f, 1.0f, 0.0f));
 
-        Material &mat2 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader"));
-        mat2.set_texture("texture1", 0, resource_lib.get_texture("AwesomeFace"));
-        mat2.set_texture("texture2", 1, resource_lib.get_texture("Container2"));
+        Material &mat2 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader2"));
+        mat2.set_texture("texture1", resource_lib.get_texture("AwesomeFace"));
+        mat2.set_texture("texture2", resource_lib.get_texture("Container2"));
         mat2.set_vector("color", glm::vec3(0.0f, 0.0f, 1.0f));
     }
 
@@ -61,14 +61,11 @@ namespace Enchine {
             }, uniform.second.value);
         }
 
-        for(auto &sampler_uniforms : material.get_sampler_uniforms())
+        for(auto &sampler_uniform : material.get_sampler_uniforms())
         {
             // TODO: Should texture really bind itself?
             //sampler_uniforms.second.texture->bind(sampler_uniforms.second.unit);
-
-            //program->set_int(sampler_uniforms.first, sampler_uniforms.second.unit);
-
-            glcontext.bind_texture(*sampler_uniforms.second.texture, sampler_uniforms.second.unit);
+            glcontext.bind_texture(sampler_uniform.second.unit, *sampler_uniform.second.texture);
         }
 
         glcontext.draw_mesh(mesh);
