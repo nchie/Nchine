@@ -9,8 +9,6 @@
 
 #include "GLContext.h"
 
-
-
 #include "../Camera/Camera.h"
 
 #include "../Meshes/Mesh.h" // TODO: Remove
@@ -23,24 +21,31 @@
 
 #include "RenderTarget.h"
 #include "RenderCommand.h"
+#include "UniformBuffer.h"
+#include "UBData.h"
 
 namespace Enchine {
 
     class Renderer {
     private: // TODO: Variables which aren't to be used later on
-        std::vector<Material> temp_materials; // TODO: Remove
+        std::vector<Material>       temp_materials; // TODO: Remove
 
     private:
 
-        GLContext glcontext;
-        ResourceLibrary resource_lib;
+        GLContext                   glcontext;
+        ResourceLibrary             resource_lib;
 
         std::optional<RenderTarget> m_gbuffer;
-        std::vector<RenderTarget> m_render_targets;
-        RenderTarget m_default_target;
-        RenderTarget *m_active_target;
+        std::vector<RenderTarget>   m_render_targets;
+        RenderTarget                m_default_target;
+        RenderTarget               *m_active_target;
+
+        UniformBuffer<UBData>       m_uniform_buffer;
+
+        Camera                      m_camera;
 
 
+        std::optional<Resource<Mesh>> test;
 
     private:
 
@@ -55,8 +60,7 @@ namespace Enchine {
         void set_target(RenderTarget& render_target, GLenum target = GL_TEXTURE_2D);
         RenderTarget& get_active_render_target();
 
-        Camera& get_camera();
-        void    set_camera(const Camera& camera);
+        Camera& get_camera() { return m_camera; }
 
 
         void run();

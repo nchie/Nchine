@@ -19,6 +19,11 @@ namespace Enchine {
 
         resource_lib.dummy_load();
 
+        test = resource_lib.get_mesh("Square");
+
+        m_camera.set_perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+
         Material &mat1 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader"));
         mat1.set_texture("texture1", resource_lib.get_texture("AwesomeFace"));
         mat1.set_texture("texture2", resource_lib.get_texture("Container2"));
@@ -27,7 +32,7 @@ namespace Enchine {
         Material &mat2 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader2"));
         mat2.set_texture("texture1", resource_lib.get_texture("AwesomeFace"));
         mat2.set_texture("texture2", resource_lib.get_texture("Container2"));
-        mat2.set_vector("color", glm::vec3(0.0f, 0.0f, 1.0f));
+
     }
 
 
@@ -38,11 +43,9 @@ namespace Enchine {
         Resource<ShaderProgram>& program = material.get_program();
 
         glcontext.use_program(*program);
-        //program->use();
-
 
         // Set common uniforms TODO: Replace with UBOs!
-        program->set_matrix("transform", glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)));
+        program->set_matrix("model", glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, -2.0f)));
 
         for(const auto &uniform : material.get_uniforms())
         {
@@ -78,24 +81,38 @@ namespace Enchine {
     }
 
     void Renderer::run() {
+
+        m_camera.update_view();
+        m_uniform_buffer.projection = m_camera.get_projection();
+        m_uniform_buffer.view = m_camera.get_view();
+        m_uniform_buffer.view_projection = m_uniform_buffer.projection * m_uniform_buffer.view;
+        //m_uniform_buffer.prev_view_projection = ?
+        //m_uniform_buffer.inverse_view(glm::inverse(m_camera.get_view()));
+
+
+        m_uniform_buffer.update();
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
 
 
         m_render_commands.emplace_back(RenderCommand {
                 glm::translate(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.0f)),
                 glm::mat4(1.0f), //?
-                *resource_lib.get_mesh("Square"),
-                temp_materials[0],
+                *(*test),
+                temp_materials[1],
                 glm::vec3(1.0f),
                 glm::vec3(1.0f)
         });
+
 
 
         for (const auto &command : m_render_commands)
         {
             render_command(&command);
         }
+        m_render_commands.clear();
     }
 
     void Renderer::set_target(RenderTarget& render_target, GLenum target) {

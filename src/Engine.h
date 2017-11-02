@@ -25,6 +25,13 @@ private:
     std::unique_ptr<Enchine::Renderer> m_renderer;
 
 
+    // TODO: Remove these?
+    double m_time_last_frame;
+    double m_delta_time;
+
+    double m_lastX = 0;
+    double m_lastY = 0;
+
 
 public:
     Engine(std::string title, int window_width=800, int window_height = 600);
@@ -33,13 +40,18 @@ public:
     void init();
     void loop();
 
+    void mouse_button_callback(int button, int action, int mods);
+    void mouse_callback(double xpos, double ypos);
+
 private:
+    void processInput();
 
 
 
 };
 
 
-void processInput(GLFWwindow *window);
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+// GLFW callback-forwarding
+void mouse_button_forward_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_forward_callback(GLFWwindow* window, double xpos, double ypos);
+void framebuffer_size_forward_callback(GLFWwindow* window, int width, int height);
