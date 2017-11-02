@@ -9,6 +9,10 @@
 
 namespace Enchine {
 
+    RenderTarget::RenderTarget() {
+        // TODO: Default render target doesn't require any settings here?
+    }
+
     RenderTarget::RenderTarget(unsigned int width, unsigned int height, GLenum type, unsigned int color_attachment_count, bool depth_and_stencil) : m_width(width),
                                                                                                                                                     m_height(height),
                                                                                                                                                     m_type(type),
@@ -42,7 +46,7 @@ namespace Enchine {
         if (depth_and_stencil)
         {
             // Create texture in-place
-            m_depth_stencil = std::make_unique<Texture2D>();
+            m_depth_stencil = Texture2D();
             m_depth_stencil->set_filter_min(GL_LINEAR);
             m_depth_stencil->set_filter_max(GL_LINEAR);
             m_depth_stencil->set_wrap_s(GL_CLAMP_TO_EDGE);
@@ -60,5 +64,46 @@ namespace Enchine {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    }
+
+    RenderTarget::~RenderTarget() {
+        if(m_id > 0) // TODO: 0 is the default FB which we don't want to delete?
+        {
+            glDeleteFramebuffers(1, &m_id);
+        }
+    }
+
+    RenderTarget::RenderTarget(RenderTarget &&other) noexcept {
+        // TODO: Check for self assignment
+
+        this->m_id   = other.m_id;
+        this->m_width = other.m_width;
+        this->m_height = other.m_height;
+        this->m_type = other.m_type;
+        this->m_has_depth_and_stencil = other.m_has_depth_and_stencil;
+
+        this->m_color_attachments = std::move(other.m_color_attachments);
+        this->m_depth_stencil = std::move(other.m_depth_stencil);
+
+        // Invalidate old mesh's ids
+        other.m_id = 0;
+    }
+
+    RenderTarget &RenderTarget::operator=(RenderTarget &&other) noexcept {
+        // TODO: Check for self assignment
+
+        this->m_id   = other.m_id;
+        this->m_width = other.m_width;
+        this->m_height = other.m_height;
+        this->m_type = other.m_type;
+        this->m_has_depth_and_stencil = other.m_has_depth_and_stencil;
+
+        this->m_color_attachments = std::move(other.m_color_attachments);
+        this->m_depth_stencil = std::move(other.m_depth_stencil);
+
+        // Invalidate old mesh's ids
+        other.m_id = 0;
+
+        return *this;
     }
 }

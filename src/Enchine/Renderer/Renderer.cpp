@@ -14,7 +14,8 @@ namespace Enchine {
 
     class GLFWwindow;
 
-    Renderer::Renderer() {
+    Renderer::Renderer() : m_active_target(&m_default_target)
+    {
 
         resource_lib.dummy_load();
 
@@ -95,6 +96,15 @@ namespace Enchine {
         {
             render_command(&command);
         }
+    }
+
+    void Renderer::set_target(RenderTarget& render_target, GLenum target) {
+        m_active_target = &render_target;
+        glBindFramebuffer(GL_FRAMEBUFFER, render_target.get_id());
+    }
+
+    RenderTarget& Renderer::get_active_render_target() {
+        return *m_active_target;
     }
 
 }

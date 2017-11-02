@@ -19,7 +19,7 @@ namespace Enchine {
         GLenum m_type            = GL_UNSIGNED_BYTE;
 
         bool m_mipmapping        = true;
-        GLenum m_filter_min      = GL_LINEAR;
+        GLenum m_filter_min      = GL_LINEAR_MIPMAP_LINEAR;
         GLenum m_filter_max      = GL_LINEAR;
         GLenum m_wrap_s          = GL_REPEAT;
         GLenum m_wrap_t          = GL_REPEAT;
@@ -50,11 +50,11 @@ namespace Enchine {
         GLenum       get_wrap_s() const { return m_wrap_s; }
         GLenum       get_wrap_t() const { return m_wrap_t; }
 
-        void    set_mipmapping(bool m_mipmapping) { m_mipmapping = m_mipmapping; }
-        void    set_filter_min(GLenum m_filter_min) { m_filter_min = m_filter_min; }
-        void    set_filter_max(GLenum m_filter_max) { m_filter_max = m_filter_max; }
-        void    set_wrap_s(GLenum m_wrap_s) { m_wrap_s = m_wrap_s; }
-        void    set_wrap_t(GLenum m_wrap_t) { m_wrap_t = m_wrap_t; }
+        void    set_mipmapping(bool mipmapping) { m_mipmapping = mipmapping; }
+        void    set_filter_min(GLenum filter_min) { m_filter_min = filter_min; }
+        void    set_filter_max(GLenum filter_max) { m_filter_max = filter_max; }
+        void    set_wrap_s(GLenum wrap_s) { m_wrap_s = wrap_s; }
+        void    set_wrap_t(GLenum wrap_t) { m_wrap_t = wrap_t; }
 
     };
 }
