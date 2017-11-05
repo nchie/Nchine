@@ -15,8 +15,8 @@ namespace Enchine {
         glm::mat4 m_view;
 
     private:
-
-        glm::vec3 m_position = glm::vec3(0.0f, 0.0f,  0.0f);
+        glm::vec3 m_world_up = glm::vec3(0.0f, 1.0f,  0.0f);
+        glm::vec3 m_position = glm::vec3(0.1f, 0.0f,  0.1f);
         glm::vec3 m_forward  = glm::vec3(0.0f, 0.0f, -1.0f);
         glm::vec3 m_up       = glm::vec3(0.0f, 1.0f,  0.0f);
         glm::vec3 m_right    = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -26,6 +26,10 @@ namespace Enchine {
         float m_near;
         float m_far;
         bool  m_perspective;
+
+        float m_yaw = 0.0f;
+        float m_pitch = 0.0f;
+        float m_roll;
 
 
     public:
@@ -37,19 +41,22 @@ namespace Enchine {
         void move_backward(float amount);
         void move_left(float amount);
         void move_right(float amount);
-        void adjust_yaw_pitch(float yaw, float pitch);
-        void adjust_yaw(float amount);
-        void adjust_pitch(float amount);
+        void move_up(float amount);
 
 
     public:
         const glm::vec3& get_position() const;
         const glm::mat4& get_view() const;
         const glm::mat4& get_projection() const;
+        float get_yaw() const { return m_yaw; }
+        float get_pitch() const { return m_pitch; }
 
         void set_position(const glm::vec3 &m_position);
         void set_view(const glm::mat4 &m_view);
         void set_projection(const glm::mat4 &m_projection);
+
+        void set_yaw(float yaw) { m_yaw = yaw; }
+        void set_pitch(float pitch) { m_pitch = pitch; }
 
 
     };

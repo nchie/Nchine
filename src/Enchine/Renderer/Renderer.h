@@ -29,13 +29,18 @@ namespace Enchine {
     class Renderer {
     private: // TODO: Variables which aren't to be used later on
         std::vector<Material>       temp_materials; // TODO: Remove
+        std::vector<RenderCommand>  temp_render_commands;
 
     private:
+
+        unsigned int                m_width = 800; // Don't have a default value
+        unsigned int                m_height = 600; // Don't have a default value
+
 
         GLContext                   glcontext;
         ResourceLibrary             resource_lib;
 
-        std::optional<RenderTarget> m_gbuffer;
+        RenderTarget                m_gbuffer;
         std::vector<RenderTarget>   m_render_targets;
         RenderTarget                m_default_target;
         RenderTarget               *m_active_target;
@@ -44,8 +49,6 @@ namespace Enchine {
 
         Camera                      m_camera;
 
-
-        std::optional<Resource<Mesh>> test;
 
     private:
 
@@ -59,6 +62,7 @@ namespace Enchine {
 
         void set_target(RenderTarget& render_target, GLenum target = GL_TEXTURE_2D);
         RenderTarget& get_active_render_target();
+        void blit_color(const RenderTarget& dst, const RenderTarget& src);
 
         Camera& get_camera() { return m_camera; }
 

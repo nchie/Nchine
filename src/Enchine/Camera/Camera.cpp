@@ -22,12 +22,19 @@ namespace Enchine {
         m_fov    = fov;
         m_aspect = aspect;
         m_near   = near;
-        m_far = far;
+        m_far    = far;
     }
 
     void Camera::update_view() {
+        m_forward.x = static_cast<float>(cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch)));
+        m_forward.y = static_cast<float>(sin(glm::radians(m_pitch)));
+        m_forward.z = static_cast<float>(sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch)));
 
-        m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
+        m_right = glm::normalize(glm::cross(m_forward, m_world_up));
+        m_forward = glm::normalize(m_forward);
+        m_up = glm::normalize(glm::cross(m_right, m_forward));
+
+        m_view = glm::lookAt(m_position, m_position + m_forward, m_world_up);
     }
 
     void Camera::move_forward(float amount) {
@@ -46,22 +53,12 @@ namespace Enchine {
         m_position += m_right * amount;
     }
 
-
-    void Camera::adjust_yaw_pitch(float yaw, float pitch)
-    {
-        m_forward.x += cos(glm::radians(yaw)) * cos(glm::radians(pitch))*0.001;
-        m_forward.y += sin(glm::radians(pitch));
-        m_forward.z += sin(glm::radians(yaw)) * cos(glm::radians(pitch))*0.0001;
-        m_forward = glm::normalize(m_forward);
+    void Camera::move_up(float amount) {
+        m_position += m_up * amount;
     }
 
-    void Camera::adjust_yaw(float amount) {
 
-    }
 
-    void Camera::adjust_pitch(float amount) {
-
-    }
 
     const glm::mat4 &Camera::get_projection() const {
         return m_projection;

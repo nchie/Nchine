@@ -44,6 +44,7 @@ void Engine::init() {
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_forward_callback);
     glfwSetMouseButtonCallback(m_window, mouse_button_forward_callback);
     glfwSetCursorPosCallback(m_window, mouse_forward_callback);
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetWindowUserPointer(m_window, this);
 
@@ -96,6 +97,8 @@ void Engine::processInput()
         camera.move_left(camera_speed);
     if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
         camera.move_right(camera_speed);
+    if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera.move_up(camera_speed);
 
     if (glfwGetKey(m_window, GLFW_KEY_F) == GLFW_PRESS)
         std::cout << "Time for last frame: " << m_delta_time << " ms. (" << 1/m_delta_time << " fps)" << std::endl;
@@ -113,7 +116,7 @@ void Engine::mouse_callback(double xpos, double ypos) {
         m_lastY = ypos;
     }
 
-    float sensitivity = 0.1f;
+    float sensitivity = 0.2f;
 
     double x_offset = (xpos - m_lastX) * sensitivity;
     double y_offset = (m_lastY - ypos) * sensitivity;
@@ -122,7 +125,24 @@ void Engine::mouse_callback(double xpos, double ypos) {
     std::cout << "y offset:" << y_offset << std::endl;
 
     auto& camera = m_renderer->get_camera();
-    camera.adjust_yaw_pitch(x_offset, y_offset);
+
+    float yaw = camera.get_yaw();
+    float pitch = camera.get_pitch();
+
+    std::cout << "yaw:" << yaw << std::endl;
+    std::cout << "pitch:" << pitch << std::endl;
+
+    yaw += x_offset;
+    pitch += y_offset;
+
+    if(pitch >= 90.0f)
+        pitch = 89.9f;
+    if(pitch <= -90.0f)
+        pitch = -89.9f;
+
+    camera.set_yaw(yaw);
+    camera.set_pitch(pitch);
+
 
     m_lastX = xpos;
     m_lastY = ypos;
