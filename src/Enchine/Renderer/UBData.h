@@ -13,4 +13,5 @@ struct UBData
     glm::mat4 projection;
     glm::mat4 view;
     glm::mat4 inverse_view;
+    glm::mat4 inverse_projection;
 };

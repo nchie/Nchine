@@ -19,7 +19,7 @@ void Enchine::ResourceLibrary::dummy_load() {
 
 
     m_shader_cache.load("DeferredGeometryShader", ShaderProgram(vertexGeometryShader, fragmentGeometryShader, {"texture_diffuse1", "texture_specular1"}));
-    m_shader_cache.load("DeferredShader", ShaderProgram(vertexDeferredShader, fragmentDeferredShader, {"albedo", "normal", "specular", "diffuse"}));
+    m_shader_cache.load("DeferredShader", ShaderProgram(vertexDeferredShader, fragmentDeferredShader, {"albedo", "normal", "specular", "diffuse", "depth"}));
     m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
     m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
     //dummy_shader->use(); // Should this be necessary?

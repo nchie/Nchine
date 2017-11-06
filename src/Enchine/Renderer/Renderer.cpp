@@ -120,12 +120,17 @@ namespace Enchine {
 
     void Renderer::run() {
 
+        glEnable(GL_DEPTH_TEST); // TODO: Fix cache
+        glDepthFunc(GL_LESS);
+
+
         m_camera.update_view();
         m_uniform_buffer.projection = m_camera.get_projection();
         m_uniform_buffer.view = m_camera.get_view();
         m_uniform_buffer.view_projection = m_uniform_buffer.projection * m_uniform_buffer.view;
+        m_uniform_buffer.inverse_projection = glm::inverse(m_uniform_buffer.projection);
         //m_uniform_buffer.prev_view_projection = ?
-        //m_uniform_buffer.inverse_view(glm::inverse(m_camera.get_view()));
+        m_uniform_buffer.inverse_view = glm::inverse(m_camera.get_view());
 
         m_uniform_buffer.update();
 
@@ -158,6 +163,7 @@ namespace Enchine {
         glcontext.use_program(deferred_shader);
         glcontext.bind_texture(deferred_shader.get_sampler_slot("albedo"), m_gbuffer.get_color_texture(0));
         glcontext.bind_texture(deferred_shader.get_sampler_slot("normal"), m_gbuffer.get_color_texture(1));
+        glcontext.bind_texture(deferred_shader.get_sampler_slot("depth"), m_gbuffer.get_depth_stencil_texture());
         //glcontext.bind_texture(deferred_shader.get_sampler_slot("texture1"), m_gbuffer.get_color_texture(2));
         glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
 

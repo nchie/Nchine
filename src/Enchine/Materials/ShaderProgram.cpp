@@ -132,6 +132,8 @@ namespace Enchine {
         if(slot >= MAX_SAMPLER_SLOTS)
             throw std::exception(); //TODO: This should be possible?
 
+        // TODO: Throw exception if not found?
+
         return slot;
 
 
