@@ -21,15 +21,8 @@ void Enchine::ResourceLibrary::dummy_load() {
 
 
     m_shader_cache.load("DeferredGeometryShader", ShaderProgram(vertexGeometryShader, fragmentGeometryShader, {"texture_diffuse1", "texture_specular1"}));
-    m_shader_cache.load("DeferredShader", ShaderProgram(vertexDeferredShader, fragmentDeferredShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
     m_shader_cache.load("DeferredAmbientShader", ShaderProgram(vertexDeferredAmbientShader, fragmentDeferredAmbientShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
     m_shader_cache.load("DeferredPointShader", ShaderProgram(vertexDeferredPointShader, fragmentDeferredPointShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
-    m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
-    m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
-    //dummy_shader->use(); // Should this be necessary?
-    //dummy_shader->add_sampler("texture1");
-    //dummy_shader->add_sampler("texture2");
-
 
     m_mesh_cache.load("Cube", Mesh(cube_positions, cube_texcoords, cube_normals, cube_indices));
     m_mesh_cache.load("Quad", Mesh(quad_positions, quad_texcoords, quad_indices));
@@ -41,9 +34,6 @@ void Enchine::ResourceLibrary::dummy_load() {
     m_texture_cache.load("AwesomeFace", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
     stbi_image_free(data);
 
-    data = stbi_load("resources/textures/container2.png", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("Container2", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
-    stbi_image_free(data);
 
     data = stbi_load("resources/textures/photosculpt-orangestonewall-diffuse.jpg", &width, &height, &nr_channels, 0);
     m_texture_cache.load("Diffuse", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
@@ -55,6 +45,14 @@ void Enchine::ResourceLibrary::dummy_load() {
 
     data = stbi_load("resources/textures/photosculpt-orangestonewall-specular.jpg", &width, &height, &nr_channels, 0);
     m_texture_cache.load("Specular", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
+    stbi_image_free(data);
+
+    data = stbi_load("resources/textures/container2.png", &width, &height, &nr_channels, 0);
+    m_texture_cache.load("ContainerDiffuse", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
+    stbi_image_free(data);
+
+    data = stbi_load("resources/textures/container2_specular.png", &width, &height, &nr_channels, 0);
+    m_texture_cache.load("ContainerSpecular", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE));
     stbi_image_free(data);
 
 

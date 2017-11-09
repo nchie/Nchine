@@ -32,7 +32,7 @@ const char *vertexGeometryShader =
 
 const char *fragmentGeometryShader =
         "#version 330 core\n"
-        "layout (location = 0) out vec4 gDiffuseSpec;\n"
+        "layout (location = 0) out vec4 gDiffuseSpecular;\n"
         "layout (location = 1) out vec4 gNormal;\n"
         "\n"
         "in vec3 Normal;  \n"
@@ -54,9 +54,9 @@ const char *fragmentGeometryShader =
         "void main()\n"
         "{\n"
         "    // Store the per-fragment normals into the gbuffer\n"
-        "    gDiffuseSpec.rgb = texture(texture_diffuse1, TexCoords).rgb;\n"
+        "    gDiffuseSpecular.rgb = texture(texture_diffuse1, TexCoords).rgb;\n"
         "    // store specular intensity in gDiffuse's alpha component\n"
-        "    gDiffuseSpec.a = texture(texture_specular1, TexCoords).r;\n"
+        "    gDiffuseSpecular.a = texture(texture_specular1, TexCoords).r*2;\n"
         "    gNormal = vec4(normalize(Normal), 0.0);\n"
         "} ";
 

@@ -34,9 +34,9 @@ namespace Enchine {
             texture->set_wrap_t(GL_CLAMP_TO_EDGE);
             texture->set_mipmapping(false);
 
-            GLenum internal_format = GL_RGBA;
+            GLenum internal_format = GL_RGBA8;
             if(attachment.second == GL_UNSIGNED_BYTE)
-                internal_format = GL_RGB8;
+                internal_format = GL_RGBA8;
             else if(attachment.second == GL_HALF_FLOAT)
                 internal_format = GL_RGBA16F;
             else if (attachment.second == GL_FLOAT)
