@@ -14,4 +14,5 @@ struct UBData
     glm::mat4 view;
     glm::mat4 inverse_view;
     glm::mat4 inverse_projection;
+    glm::vec2 half_size_near_plane;
 };

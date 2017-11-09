@@ -123,7 +123,7 @@ namespace Enchine {
             m_depth_stencil->set_wrap_s(GL_CLAMP_TO_EDGE);
             m_depth_stencil->set_wrap_t(GL_CLAMP_TO_EDGE);
             m_depth_stencil->set_mipmapping(false);
-            m_depth_stencil->generate(nullptr, width, height, GL_DEPTH_STENCIL, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
+            m_depth_stencil->generate(nullptr, width, height, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
 
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depth_stencil->get_id(), 0);
         }

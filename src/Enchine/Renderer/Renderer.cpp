@@ -16,15 +16,12 @@ namespace Enchine {
 
     Renderer::Renderer() : m_default_target(m_width, m_height),
                            m_active_target(&m_default_target),
-                           m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}, // Albedo
-                                                               {GL_COLOR_ATTACHMENT1, GL_UNSIGNED_BYTE}, // Normals
-                                                               {GL_COLOR_ATTACHMENT2, GL_FLOAT},         // Specular
-                                                               {GL_COLOR_ATTACHMENT3, GL_FLOAT}})        // Diffuse?
+                           m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}, // DiffuseSpecular
+                                                               {GL_COLOR_ATTACHMENT1, GL_FLOAT}})        // Normals
     {
 
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
-
 
         resource_lib.dummy_load();
 
@@ -52,18 +49,21 @@ namespace Enchine {
         mat2.set_texture("texture_diffuse1", resource_lib.get_texture("Diffuse"));
         mat2.set_texture("texture_specular1", resource_lib.get_texture("Specular"));*/
 
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < 4; i++)
         {
-            for(int k = 0; k < 1; k++)
+            for(int j = 0; j < 4; j++)
             {
-                temp_render_commands.emplace_back(RenderCommand {
-                        glm::translate(glm::mat4(1.0f), glm::vec3(i, 0.0f, k)),
-                        glm::mat4(1.0f), //?
-                        &(*resource_lib.get_mesh("Cube")),
-                        &temp_materials[2],
-                        glm::vec3(1.0f),
-                        glm::vec3(1.0f)
-                });
+                for(int k = 0; k < 4; k++)
+                {
+                    temp_render_commands.emplace_back(RenderCommand {
+                            glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)),
+                            glm::mat4(1.0f), //?
+                            &(*resource_lib.get_mesh("Cube")),
+                            &temp_materials[2],
+                            glm::vec3(1.0f),
+                            glm::vec3(1.0f)
+                    });
+                }
             }
         }
 
@@ -118,6 +118,7 @@ namespace Enchine {
         glcontext.draw_mesh(*mesh);
     }
 
+
     void Renderer::run() {
 
         glEnable(GL_DEPTH_TEST); // TODO: Fix cache
@@ -131,6 +132,7 @@ namespace Enchine {
         m_uniform_buffer.inverse_projection = glm::inverse(m_uniform_buffer.projection);
         //m_uniform_buffer.prev_view_projection = ?
         m_uniform_buffer.inverse_view = glm::inverse(m_camera.get_view());
+        m_uniform_buffer.half_size_near_plane = glm::vec2(glm::tan(m_camera.get_fov()/2.0) * m_camera.get_aspect(), glm::tan(m_camera.get_fov()/2.0));
 
         m_uniform_buffer.update();
 
@@ -161,10 +163,9 @@ namespace Enchine {
         auto& deferred_shader = *resource_lib.get_shader("DeferredShader");
 
         glcontext.use_program(deferred_shader);
-        glcontext.bind_texture(deferred_shader.get_sampler_slot("albedo"), m_gbuffer.get_color_texture(0));
-        glcontext.bind_texture(deferred_shader.get_sampler_slot("normal"), m_gbuffer.get_color_texture(1));
-        glcontext.bind_texture(deferred_shader.get_sampler_slot("depth"), m_gbuffer.get_depth_stencil_texture());
-        //glcontext.bind_texture(deferred_shader.get_sampler_slot("texture1"), m_gbuffer.get_color_texture(2));
+        glcontext.bind_texture(deferred_shader.get_sampler_slot("gDiffuseSpecular"), m_gbuffer.get_color_texture(0));
+        glcontext.bind_texture(deferred_shader.get_sampler_slot("gNormal"), m_gbuffer.get_color_texture(1));
+        glcontext.bind_texture(deferred_shader.get_sampler_slot("gDepth"), m_gbuffer.get_depth_stencil_texture());
         glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
 
         //glReadBuffer(GL_COLOR_ATTACHMENT0);

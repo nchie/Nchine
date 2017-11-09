@@ -45,6 +45,8 @@ namespace Enchine {
 
 
     public:
+        float get_fov() const { return m_fov; };
+        float get_aspect() const { return m_aspect; };
         const glm::vec3& get_position() const;
         const glm::mat4& get_view() const;
         const glm::mat4& get_projection() const;
