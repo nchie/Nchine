@@ -30,11 +30,13 @@ namespace Enchine {
     private: // TODO: Variables which aren't to be used later on
         std::vector<Material>       temp_materials; // TODO: Remove
         std::vector<RenderCommand>  temp_render_commands;
+    public:
+        bool                        light_is_on = false; // Ta bort
 
     private:
 
-        unsigned int                m_width = 800; // Don't have a default value
-        unsigned int                m_height = 600; // Don't have a default value
+        float                       m_width = 1920; // Don't have a default value
+        float                       m_height = 1080; // Don't have a default value
 
 
         GLContext                   glcontext;
@@ -42,6 +44,7 @@ namespace Enchine {
 
         RenderTarget                m_gbuffer;
         std::vector<RenderTarget>   m_render_targets;
+        RenderTarget                m_test_target;
         RenderTarget                m_default_target;
         RenderTarget               *m_active_target;
 
@@ -57,7 +60,7 @@ namespace Enchine {
         void render_command(const RenderCommand* command /*TODO: Camera */);
 
     public:
-        Renderer();
+        Renderer(int width, int height);
         ~Renderer() = default;
 
         void set_target(RenderTarget& render_target, GLenum target = GL_TEXTURE_2D);

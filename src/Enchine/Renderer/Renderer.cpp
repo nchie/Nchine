@@ -14,10 +14,13 @@ namespace Enchine {
 
     class GLFWwindow;
 
-    Renderer::Renderer() : m_default_target(m_width, m_height),
-                           m_active_target(&m_default_target),
-                           m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}, // DiffuseSpecular
-                                                               {GL_COLOR_ATTACHMENT1, GL_FLOAT}})        // Normals
+    Renderer::Renderer(int width, int height) :    m_width(width),
+                                                   m_height(height),
+                                                   m_default_target(m_width, m_height),
+                                                   m_active_target(&m_default_target),
+                                                   m_test_target(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}}),
+                                                   m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}, // DiffuseSpecular
+                                                                                       {GL_COLOR_ATTACHMENT1, GL_FLOAT}})        // Normals
     {
 
         glEnable(GL_DEPTH_TEST);
@@ -26,7 +29,10 @@ namespace Enchine {
         resource_lib.dummy_load();
 
 
-        m_camera.set_perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+
+
+        m_camera.set_perspective(glm::radians(60.0f), m_width / m_height, 0.1f, 100.0f);
 
 
         Material &mat1 = temp_materials.emplace_back(resource_lib.get_shader("DummyShader"));
@@ -92,7 +98,7 @@ namespace Enchine {
 
         for(const auto &uniform : material->get_uniforms())
         {
-            // C++17 magic switch case! TODO: Make this thing not as ugly!? Change to SWITCH-case with enums because it's probably more performant?
+            // C++17 magic switch case! TODO: Make this thing not as ugly!? Change to SWITCH-case with enums because it's probably better performing?
             std::visit(overloaded {
                     [&](auto arg)       { }, // Default: Do nothing
                     [&](bool arg)       { program->set_bool(uniform.first, arg);  },
@@ -123,6 +129,7 @@ namespace Enchine {
 
         glEnable(GL_DEPTH_TEST); // TODO: Fix cache
         glDepthFunc(GL_LESS);
+        glDisable(GL_BLEND);
 
 
         m_camera.update_view();
@@ -166,10 +173,47 @@ namespace Enchine {
         glcontext.bind_texture(deferred_shader.get_sampler_slot("gDiffuseSpecular"), m_gbuffer.get_color_texture(0));
         glcontext.bind_texture(deferred_shader.get_sampler_slot("gNormal"), m_gbuffer.get_color_texture(1));
         glcontext.bind_texture(deferred_shader.get_sampler_slot("gDepth"), m_gbuffer.get_depth_stencil_texture());
-        glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
+        //glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
 
         //glReadBuffer(GL_COLOR_ATTACHMENT0);
         //blit_color(m_default_target, m_gbuffer);
+
+        //set_target(m_test_target);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        // Render deferred ambient light
+        auto& deferred_ambient_shader = *resource_lib.get_shader("DeferredAmbientShader");
+
+        glcontext.use_program(deferred_ambient_shader);
+        glcontext.bind_texture(deferred_ambient_shader.get_sampler_slot("gDiffuseSpecular"), m_gbuffer.get_color_texture(0));
+        glcontext.bind_texture(deferred_ambient_shader.get_sampler_slot("gNormal"), m_gbuffer.get_color_texture(1));
+        glcontext.bind_texture(deferred_ambient_shader.get_sampler_slot("gDepth"), m_gbuffer.get_depth_stencil_texture());
+        glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
+
+
+        if(light_is_on) {
+
+            auto &deferred_point_shader = *resource_lib.get_shader("DeferredPointShader");
+
+            glcontext.use_program(deferred_point_shader);
+            glcontext.bind_texture(deferred_point_shader.get_sampler_slot("gDiffuseSpecular"),
+                                   m_gbuffer.get_color_texture(0));
+            glcontext.bind_texture(deferred_point_shader.get_sampler_slot("gNormal"), m_gbuffer.get_color_texture(1));
+            glcontext.bind_texture(deferred_point_shader.get_sampler_slot("gDepth"),
+                                   m_gbuffer.get_depth_stencil_texture());
+            deferred_point_shader.set_vector("viewPos", m_camera.get_position());
+            deferred_point_shader.set_vector("lightPos", m_camera.get_position());
+            deferred_point_shader.set_vector("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+            deferred_point_shader.set_float("lightRadius", 55.5f);
+            glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
+        }
+
+
+        // Render deferred point lights
+
 
     }
 

@@ -6,6 +6,8 @@
 #include <stb_image.h> // TODO: Remove
 #include "TestResources/TestShader1.h"
 #include "TestResources/DeferredShader.h"
+#include "TestResources/DeferredAmbientShader.h"
+#include "TestResources/DeferredPointShader.h"
 #include "TestResources/TestCube.h"
 #include "TestResources/TestQuad.h"
 
@@ -20,6 +22,8 @@ void Enchine::ResourceLibrary::dummy_load() {
 
     m_shader_cache.load("DeferredGeometryShader", ShaderProgram(vertexGeometryShader, fragmentGeometryShader, {"texture_diffuse1", "texture_specular1"}));
     m_shader_cache.load("DeferredShader", ShaderProgram(vertexDeferredShader, fragmentDeferredShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
+    m_shader_cache.load("DeferredAmbientShader", ShaderProgram(vertexDeferredAmbientShader, fragmentDeferredAmbientShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
+    m_shader_cache.load("DeferredPointShader", ShaderProgram(vertexDeferredPointShader, fragmentDeferredPointShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
     m_shader_cache.load("DummyShader", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
     m_shader_cache.load("DummyShader2", ShaderProgram(vertexShaderSourcePerspective, fragmentShaderSourcePerspective, {"texture1", "texture2"}));
     //dummy_shader->use(); // Should this be necessary?

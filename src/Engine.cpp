@@ -55,7 +55,7 @@ void Engine::init() {
         throw std::exception();  //Failed to initialize GLAD
     }
 
-    m_renderer = std::make_unique<Enchine::Renderer>();
+    m_renderer = std::make_unique<Enchine::Renderer>(m_window_width, m_window_height);
 }
 
 void Engine::loop() {
@@ -107,6 +107,7 @@ void Engine::processInput()
 void Engine::mouse_button_callback(int button, int action, int mods)
 {
     std::cout << "Time for last frame: " << m_delta_time << " ms. (" << 1/m_delta_time << " fps)" << std::endl;
+    m_renderer->light_is_on = !m_renderer->light_is_on;
 }
 
 void Engine::mouse_callback(double xpos, double ypos) {

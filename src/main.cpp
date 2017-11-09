@@ -7,7 +7,7 @@
 
 
 int main() {
-    Engine engine("Hejsan");
+    Engine engine("Hej", 800, 600);
     engine.init();
 
     engine.loop();

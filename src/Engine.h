@@ -18,8 +18,8 @@ private:
     GLFWwindow* m_window;
 
     // settings
-    int m_window_width = 800;
-    int m_window_height = 600;
+    int m_window_width;
+    int m_window_height;
     std::string m_window_title;
 
     std::unique_ptr<Enchine::Renderer> m_renderer;
