@@ -7,7 +7,7 @@
 
 
 int main() {
-    Engine engine("Hej", 800, 600);
+    Engine engine("OpenGL", 800, 600);
     engine.init();
 
     engine.loop();

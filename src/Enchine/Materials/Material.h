@@ -19,15 +19,13 @@
 namespace Enchine {
 
     class Material {
-        Resource<ShaderProgram> m_program;
-
     private:
+        Resource<ShaderProgram> m_program;
 
         std::map<std::string, UniformValue> m_uniforms; // TODO: Make vector?
         std::map<std::string, UniformValueSampler> m_sampler_uniforms; // TODO: Make vector?
     public:
-        Material(const Resource<ShaderProgram>& program);
-
+        Material(Resource<ShaderProgram> program);
 
         void set_bool(std::string name, bool value);
         void set_int(std::string name, int value);

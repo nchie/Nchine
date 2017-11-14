@@ -1,4 +1,4 @@
-const char *vertexDeferredAmbientShader =
+const char *vertexSSAOShader =
         "#version 330 core\n"
         "\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -25,7 +25,7 @@ const char *vertexDeferredAmbientShader =
         "   gl_Position = vec4(aPos.xy, 0, 1);\n"
         "}";
 
-const char *fragmentDeferredAmbientShader =
+const char *fragmentSSAOShader =
         "#version 330 core\n"
         "//Fragment shader\n"
         "layout (location = 0) out vec3 FragColor;\n"
@@ -57,11 +57,12 @@ const char *fragmentDeferredAmbientShader =
         "void main()\n"
         "{\n"
         "  vec4  viewPosition   = CalcViewPosFromWindow(texture(gDepth, TexCoords).x, EyeDirection, projection);\n"
-        "  vec3  worldPosition  = (inverse_view*viewPosition).rgb;\n"
-        "  vec3  normal         = texture(gNormal, TexCoords).rgb;\n"
+        "  vec3  worldPosition  = (inverse_view*viewPosition).xyz;\n"
+        "  vec4  worldNormal    = vec4(texture(gNormal, TexCoords).xyz, 0.0);\n"
+        "  vec4  viewNormal     = view*worldNormal;\n"
         "  vec3  diffuse        = texture(gDiffuseSpecular, TexCoords).rgb;\n"
         "  float specular       = texture(gDiffuseSpecular, TexCoords).a;\n"
         "  \n"
-        "  FragColor            = diffuse * 0.04;\n"
+        "  FragColor            = viewNormal.rgb;\n"
         "}";
 

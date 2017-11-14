@@ -4,9 +4,23 @@
 
 #pragma once
 
+#include "SceneNode.h"
+#include <vector>
+#include <optional>
 
-class SceneGraph {
+namespace Enchine {
 
-};
+    class SceneGraph {
 
+    private:
+
+    public:
+
+
+    private:
+
+    };
+
+
+}
 

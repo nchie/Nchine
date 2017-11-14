@@ -44,7 +44,7 @@ void Engine::init() {
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_forward_callback);
     glfwSetMouseButtonCallback(m_window, mouse_button_forward_callback);
     glfwSetCursorPosCallback(m_window, mouse_forward_callback);
-    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetWindowUserPointer(m_window, this);
 

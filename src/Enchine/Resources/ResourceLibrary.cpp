@@ -5,6 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION // TODO: Remove
 #include <stb_image.h> // TODO: Remove
 #include "TestResources/TestShader1.h"
+#include "TestResources/SSAOShader.h"
 #include "TestResources/DeferredShader.h"
 #include "TestResources/DeferredAmbientShader.h"
 #include "TestResources/DeferredPointShader.h"
@@ -23,6 +24,8 @@ void Enchine::ResourceLibrary::dummy_load() {
     m_shader_cache.load("DeferredGeometryShader", ShaderProgram(vertexGeometryShader, fragmentGeometryShader, {"texture_diffuse1", "texture_specular1"}));
     m_shader_cache.load("DeferredAmbientShader", ShaderProgram(vertexDeferredAmbientShader, fragmentDeferredAmbientShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
     m_shader_cache.load("DeferredPointShader", ShaderProgram(vertexDeferredPointShader, fragmentDeferredPointShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
+    m_shader_cache.load("SSAOShader", ShaderProgram(vertexSSAOShader, fragmentSSAOShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
+
 
     m_mesh_cache.load("Cube", Mesh(cube_positions, cube_texcoords, cube_normals, cube_indices));
     m_mesh_cache.load("Quad", Mesh(quad_positions, quad_texcoords, quad_indices));
@@ -36,15 +39,15 @@ void Enchine::ResourceLibrary::dummy_load() {
 
 
     data = stbi_load("resources/textures/photosculpt-orangestonewall-diffuse.jpg", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("Diffuse", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
+    m_texture_cache.load("StonewallDiffuse", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
     stbi_image_free(data);
 
     data = stbi_load("resources/textures/photosculpt-orangestonewall-normal.jpg", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("Normal", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
+    m_texture_cache.load("StonewallNormal", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
     stbi_image_free(data);
 
     data = stbi_load("resources/textures/photosculpt-orangestonewall-specular.jpg", &width, &height, &nr_channels, 0);
-    m_texture_cache.load("Specular", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
+    m_texture_cache.load("StonewallSpecular", Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, GL_RGB, GL_UNSIGNED_BYTE));
     stbi_image_free(data);
 
     data = stbi_load("resources/textures/container2.png", &width, &height, &nr_channels, 0);

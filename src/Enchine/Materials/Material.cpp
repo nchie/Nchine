@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Enchine {
-    Material::Material(const Resource<ShaderProgram>& program) : m_program(program){
+    Material::Material(Resource<ShaderProgram> program) : m_program(std::move(program)){
 
     }
 
@@ -32,7 +32,7 @@ namespace Enchine {
         int slot = m_program->get_sampler_slot(name);
 
         if(slot >= 0)
-            m_sampler_uniforms.emplace(name, UniformValueSampler {slot, value});
+            m_sampler_uniforms.emplace(name, UniformValueSampler {name, slot, value});
     }
 
     void Material::set_vector(std::string name, glm::vec2 value) {

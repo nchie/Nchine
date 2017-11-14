@@ -5,12 +5,11 @@
 #include "Renderer.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <variant>
+#include "../Utilities/overloaded.h"
+#include "../Scene/SceneNode.h"
 
 namespace Enchine {
 
-    // TODO: Remove this if not needed later on?
-    template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-    template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
     class GLFWwindow;
 
@@ -18,11 +17,10 @@ namespace Enchine {
                                                    m_height(height),
                                                    m_default_target(m_width, m_height),
                                                    m_active_target(&m_default_target),
-                                                   m_test_target(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}}),
-                                                   m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}, // DiffuseSpecular
-                                                                                       {GL_COLOR_ATTACHMENT1, GL_FLOAT}})        // Normals
+                                                   m_ssao_target(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}}),
+                                                   m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE},      // DiffuseSpecular
+                                                                                       {GL_COLOR_ATTACHMENT1, GL_HALF_FLOAT}})        // Normals
     {
-
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
 
@@ -32,29 +30,35 @@ namespace Enchine {
         m_camera.set_perspective(glm::radians(60.0f), m_width / m_height, 0.1f, 100.0f);
 
 
-        Material &deferredGeometry = temp_materials.emplace_back(resource_lib.get_shader("DeferredGeometryShader"));
-        deferredGeometry.set_texture("texture_diffuse1", resource_lib.get_texture("Diffuse"));
-        deferredGeometry.set_texture("texture_specular1", resource_lib.get_texture("Specular"));
+        /* TESTING SCENE GRAPH! */
 
 
-        Material &container = temp_materials.emplace_back(resource_lib.get_shader("DeferredGeometryShader"));
-        container.set_texture("texture_diffuse1", resource_lib.get_texture("ContainerDiffuse"));
-        container.set_texture("texture_specular1", resource_lib.get_texture("ContainerSpecular"));
+        Material &mat1 = temp_materials.emplace_back(resource_lib.get_shader("DeferredGeometryShader"));
+        mat1.set_texture("texture_diffuse1", resource_lib.get_texture("StonewallDiffuse"));
+        mat1.set_texture("texture_specular1", resource_lib.get_texture("StonewallSpecular"));
 
-        for(int i = 0; i < 100; i++)
+        Material stonewall = mat1;
+
+        Material &mat2 = temp_materials.emplace_back(resource_lib.get_shader("DeferredGeometryShader"));
+        mat2.set_texture("texture_diffuse1", resource_lib.get_texture("ContainerDiffuse"));
+        mat2.set_texture("texture_specular1", resource_lib.get_texture("ContainerSpecular"));
+
+        Material container = mat2;
+
+
+
+
+        /* TESTING ENDS HERE */
+
+
+        for(int i = 0; i < 15*3; i++)
         {
             for(int j = 0; j < 1; j++)
             {
-                for(int k = 0; k < 100; k++)
+                for(int k = 0; k < 8*3; k++)
                 {
-                    temp_render_commands.emplace_back(RenderCommand {
-                            glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)),
-                            glm::mat4(1.0f), //?
-                            &(*resource_lib.get_mesh("Cube")),
-                            &temp_materials[0],
-                            glm::vec3(1.0f),
-                            glm::vec3(1.0f)
-                    });
+                    auto& node1 = m_scene_list.emplace_back(stonewall, resource_lib.get_mesh("Cube"));
+                    node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
                 }
             }
         }
@@ -65,14 +69,8 @@ namespace Enchine {
             {
                 for(int k = 5; k < 7; k++)
                 {
-                    temp_render_commands.emplace_back(RenderCommand {
-                            glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)),
-                            glm::mat4(1.0f), //?
-                            &(*resource_lib.get_mesh("Cube")),
-                            &temp_materials[1],
-                            glm::vec3(1.0f),
-                            glm::vec3(1.0f)
-                    });
+                    auto& node1 = m_scene_list.emplace_back(container, resource_lib.get_mesh("Cube"));
+                    node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
                 }
             }
         }
@@ -120,11 +118,25 @@ namespace Enchine {
 
 
     void Renderer::run() {
+        m_render_commands = temp_render_commands;
+
+        for(auto& node : m_scene_list) {
+            auto& material = node.get_material();
+            auto& mesh = node.get_mesh();
+
+            m_render_commands.push_back(RenderCommand {
+                    node.get_transform(),
+                    glm::mat4(1.0f), //PrevTransform?
+                    &mesh,
+                    &material,
+                    glm::vec3(1.0f),
+                    glm::vec3(1.0f)
+            });
+        }
 
         glEnable(GL_DEPTH_TEST); // TODO: Fix cache
         glDepthFunc(GL_LESS);
         glDisable(GL_BLEND);
-
 
         m_camera.update_view();
         m_uniform_buffer.projection = m_camera.get_projection();
@@ -140,12 +152,8 @@ namespace Enchine {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_render_commands = temp_render_commands;
-
         /* GEOMETRY PASS */
         set_target(m_gbuffer);
-
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (const auto &command : m_render_commands)
@@ -155,10 +163,22 @@ namespace Enchine {
         m_render_commands.clear();
 
 
+        /* SSAO PASS */
+        set_target(m_ssao_target);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_DEPTH_TEST);
+        auto& ssao_shader = *resource_lib.get_shader("SSAOShader");
+        glcontext.use_program(ssao_shader);
+        glcontext.bind_texture(ssao_shader.get_sampler_slot("gDiffuseSpecular"), m_gbuffer.get_color_texture(0));
+        glcontext.bind_texture(ssao_shader.get_sampler_slot("gNormal"), m_gbuffer.get_color_texture(1));
+        glcontext.bind_texture(ssao_shader.get_sampler_slot("gDepth"), m_gbuffer.get_depth_stencil_texture());
+        glcontext.draw_mesh(*resource_lib.get_mesh("Quad"));
 
-
+        //glReadBuffer(GL_COLOR_ATTACHMENT0);
+        //blit_color(m_default_target, m_ssao_target);
 
         /* DEFERRED PASS */
+
         set_target(m_default_target);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -184,7 +204,10 @@ namespace Enchine {
                 {52.3048, 7.74404, 34.2086},
                 {24.4442, 7.49152, 61.9075},
                 {85.0334, 1.26778, 94.5421},
-                {3.9625, 2.85379, 3.14711}
+                {3.9625, 2.85379, 3.14711},
+                {-4.51361, 1.33089, -0.222842},
+                {1.30545, -0.0861637, 0.226721},
+                {-0.0604437, 0.607219, -2.40954}
 
         };
 
@@ -195,7 +218,7 @@ namespace Enchine {
         glcontext.bind_texture(deferred_point_shader.get_sampler_slot("gDepth"), m_gbuffer.get_depth_stencil_texture());
         deferred_point_shader.set_vector("viewPos", m_camera.get_position());
         if(light_is_on) {
-            std::cout << m_camera.get_position().x << ", " << m_camera.get_position().y << ", " << m_camera.get_position().z << std::endl;
+            //std::cout << m_camera.get_position().x << ", " << m_camera.get_position().y << ", " << m_camera.get_position().z << std::endl;
             for(auto& light : lights) {
                 deferred_point_shader.set_vector("lightPos", light);
                 deferred_point_shader.set_vector("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
@@ -206,7 +229,6 @@ namespace Enchine {
 
 
         // Render deferred point lights
-
 
     }
 
@@ -225,7 +247,7 @@ namespace Enchine {
         glBlitFramebuffer(
                 0, 0, src.get_width(), src.get_height(), 0, 0, dst.get_width(), dst.get_height(), GL_COLOR_BUFFER_BIT, GL_NEAREST
         );
-        glBindFramebuffer(GL_FRAMEBUFFER, dst.get_id()); // TODO: Should this really bind to the default fb?
+        //glBindFramebuffer(GL_FRAMEBUFFER, dst.get_id()); // TODO: Should this really bind to the default fb?
     }
 
 
