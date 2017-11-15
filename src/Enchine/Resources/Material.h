@@ -7,12 +7,10 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "../Resources/ResourceCache.h"
+#include "ResourceCache.h"
 
 #include "ShaderProgram.h"
 #include "Texture2D.h"
-#include "UniformValue.h"
-#include "UniformValueSampler.h"
 
 #include <map>
 

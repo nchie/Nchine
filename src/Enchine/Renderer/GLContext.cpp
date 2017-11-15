@@ -4,9 +4,9 @@
 
 #include "GLContext.h"
 
-#include "../Materials/ShaderProgram.h"
-#include "../Materials/Texture2D.h"
-#include "../Meshes/Mesh.h"
+#include "../Resources/ShaderProgram.h"
+#include "../Resources/Texture2D.h"
+#include "../Resources/Geometry.h"
 
 namespace Enchine {
 
@@ -25,7 +25,7 @@ namespace Enchine {
         glBindTexture(GL_TEXTURE_2D, texture.get_id());
     }
 
-    void GLContext::draw_mesh(const Enchine::Mesh &mesh) {
+    void GLContext::draw_mesh(const Enchine::Geometry &mesh) {
         if (m_active_vao != mesh.get_vao()) {
             glBindVertexArray(mesh.get_vao());
         }

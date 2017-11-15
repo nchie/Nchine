@@ -7,8 +7,7 @@
 
 namespace Enchine
 {
-    SceneNode::SceneNode(Material material, Resource<Mesh> mesh) : m_material(material),
-                                                                   m_mesh(std::move(mesh))
+    SceneNode::SceneNode(Mesh mesh) : m_mesh(std::move(mesh))
     {
 
     }

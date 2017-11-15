@@ -11,11 +11,11 @@
 
 #include "../Camera/Camera.h"
 
-#include "../Meshes/Mesh.h" // TODO: Remove
+#include "../Resources/Geometry.h" // TODO: Remove
 
-#include "../Materials/ShaderProgram.h" // TODO: Remove
-#include "../Materials/Material.h" // TODO: Remove
-#include "../Materials/Texture2D.h" // TODO: Remove
+#include "../Resources/ShaderProgram.h" // TODO: Remove
+#include "../Resources/Material.h" // TODO: Remove
+#include "../Resources/Texture2D.h" // TODO: Remove
 
 #include "../Resources/ResourceLibrary.h"
 

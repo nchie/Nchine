@@ -6,9 +6,9 @@
 
 #include "ResourceCache.h"
 #include "ResourceLoader.h"
-#include "../Materials/ShaderProgram.h"
-#include "../Materials/Texture2D.h"
-#include "../Meshes/Mesh.h"
+#include "ShaderProgram.h"
+#include "Texture2D.h"
+#include "Geometry.h"
 
 
 
@@ -27,7 +27,7 @@ namespace Enchine
     private:
         ResourceCache<ShaderProgram> m_shader_cache;
         ResourceCache<Texture2D>     m_texture_cache;
-        ResourceCache<Mesh>          m_mesh_cache;
+        ResourceCache<Geometry>          m_mesh_cache;
         ResourceLoader       m_resource_loader;
 
     public:
@@ -38,7 +38,7 @@ namespace Enchine
 
         Resource<ShaderProgram> get_shader(std::string name);
         Resource<Texture2D> get_texture(std::string name);
-        Resource<Mesh> get_mesh(std::string name);
+        Resource<Geometry> get_mesh(std::string name);
 
 
     };

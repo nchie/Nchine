@@ -10,7 +10,7 @@ namespace Enchine {
 
     class ShaderProgram;
     class Texture2D;
-    class Mesh;
+    class Geometry;
 
     class GLContext {
 
@@ -22,7 +22,7 @@ namespace Enchine {
     public:
         void use_program(const ShaderProgram& program);
         void bind_texture(unsigned int unit, const Texture2D& texture);
-        void draw_mesh(const Mesh& mesh);
+        void draw_mesh(const Geometry& mesh);
 
     };
 }

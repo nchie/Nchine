@@ -27,8 +27,8 @@ void Enchine::ResourceLibrary::dummy_load() {
     m_shader_cache.load("SSAOShader", ShaderProgram(vertexSSAOShader, fragmentSSAOShader, {"gDiffuseSpecular", "gNormal", "gDepth"}));
 
 
-    m_mesh_cache.load("Cube", Mesh(cube_positions, cube_texcoords, cube_normals, cube_indices));
-    m_mesh_cache.load("Quad", Mesh(quad_positions, quad_texcoords, quad_indices));
+    m_mesh_cache.load("Cube", Geometry(cube_positions, cube_texcoords, cube_normals, cube_indices));
+    m_mesh_cache.load("Quad", Geometry(quad_positions, quad_texcoords, quad_indices));
 
 
     unsigned char *data;
@@ -71,6 +71,6 @@ Enchine::Resource<Enchine::Texture2D> Enchine::ResourceLibrary::get_texture(std:
     return m_texture_cache.get_resource(name);
 }
 
-Enchine::Resource<Enchine::Mesh> Enchine::ResourceLibrary::get_mesh(std::string name) {
+Enchine::Resource<Enchine::Geometry> Enchine::ResourceLibrary::get_mesh(std::string name) {
     return m_mesh_cache.get_resource(name);
 }

@@ -2,20 +2,20 @@
 // Created by aejt on 10/22/17.
 //
 
-#include "Mesh.h"
+#include "Geometry.h"
 
 #include <glad/glad.h>
 
 
 namespace Enchine {
 
-    Mesh::Mesh(const std::vector<float> &vertice_data, const std::vector<int> &indices,
+    Geometry::Geometry(const std::vector<float> &vertice_data, const std::vector<int> &indices,
                std::bitset<ATTRIBUTE_COUNT> attributes) : m_attribute_data(attributes) {
         generate(vertice_data, indices);
     }
 
-    Mesh::Mesh(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices) {
-        // Mesh with only vertices
+    Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices) {
+        // Geometry with only vertices
         m_attribute_data = flags::none;
 
         // Append all vertex positions
@@ -30,9 +30,9 @@ namespace Enchine {
         generate(vertice_data, indices);
     }
 
-    Mesh::Mesh(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
+    Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
                const std::vector<int> &indices) {
-        // Mesh with vertices and texture coords
+        // Geometry with vertices and texture coords
         m_attribute_data = flags::texcoords;
 
 
@@ -53,9 +53,9 @@ namespace Enchine {
         generate(vertice_data, indices);
     }
 
-    Mesh::Mesh(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
+    Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
                const std::vector<glm::vec3> &normals, const std::vector<int> &indices) {
-        // Mesh with vertices, texture coords and normals
+        // Geometry with vertices, texture coords and normals
         m_attribute_data = flags::texcoords | flags::normals;
 
         // Append all vertex positions
@@ -82,7 +82,7 @@ namespace Enchine {
 
     }
 
-    Mesh::~Mesh()
+    Geometry::~Geometry()
     {
         // If ids are still valid, delete them (if they haven't, they have been moved)
 
@@ -100,7 +100,7 @@ namespace Enchine {
         }
     }
 
-    Mesh::Mesh(Mesh &&other) noexcept{
+    Geometry::Geometry(Geometry &&other) noexcept{
         this->m_vao   = other.m_vao;
         this->m_vbo   = other.m_vbo;
         this->m_ebo   = other.m_ebo;
@@ -116,7 +116,7 @@ namespace Enchine {
         other.m_ebo = 0;
     }
 
-    Mesh &Mesh::operator=(Mesh &&other) noexcept{
+    Geometry &Geometry::operator=(Geometry &&other) noexcept{
         this->m_vao   = other.m_vao;
         this->m_vbo   = other.m_vbo;
         this->m_ebo   = other.m_ebo;
@@ -133,7 +133,7 @@ namespace Enchine {
     }
 
 
-    void Mesh::generate(const std::vector<float> &vertice_data, const std::vector<int> &indices) {
+    void Geometry::generate(const std::vector<float> &vertice_data, const std::vector<int> &indices) {
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
         glGenBuffers(1, &m_ebo);
@@ -188,7 +188,7 @@ namespace Enchine {
         glBindVertexArray(0);
     }
 
-    int Mesh::get_stride() const {
+    int Geometry::get_stride() const {
         int stride = 3 * sizeof(float); // Vertices are always needed for a mesh!
 
         std::string test = m_attribute_data.to_string();
@@ -202,7 +202,7 @@ namespace Enchine {
         return stride;
     }
 
-    void Mesh::draw() const {
+    void Geometry::draw() const {
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, m_indice_count, GL_UNSIGNED_INT, 0);
     }

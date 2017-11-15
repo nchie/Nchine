@@ -14,7 +14,7 @@
 
 namespace Enchine {
 
-    class Mesh {
+    class Geometry {
         static const int ATTRIBUTE_COUNT = 8;
         static const int COLORS_BIT = 0;
         static const int TEXCOORDS_BIT = 1;
@@ -31,25 +31,25 @@ namespace Enchine {
         unsigned int m_indice_count = 0;
 
     public:
-        Mesh(const std::vector<float> &vertice_data, const std::vector<int> &indices,
+        Geometry(const std::vector<float> &vertice_data, const std::vector<int> &indices,
              std::bitset<ATTRIBUTE_COUNT> attributes);
 
-        Mesh(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices);
+        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices);
 
-        Mesh(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv, const std::vector<int> &indices);
+        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv, const std::vector<int> &indices);
 
-        Mesh(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
+        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
              const std::vector<glm::vec3> &normals, const std::vector<int> &indices);
 
-        ~Mesh();
+        ~Geometry();
 
         // Copy constructors: deleted
-        Mesh& operator=(const Mesh& other) = delete;
-        Mesh(const Mesh& other) = delete;
+        Geometry& operator=(const Geometry& other) = delete;
+        Geometry(const Geometry& other) = delete;
 
         // Move constructors
-        Mesh(Mesh&& other) noexcept;
-        Mesh& operator=(Mesh&& other) noexcept;
+        Geometry(Geometry&& other) noexcept;
+        Geometry& operator=(Geometry&& other) noexcept;
 
         enum flags {
             none = 0,

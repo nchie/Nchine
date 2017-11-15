@@ -6,9 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../Resources/ResourceCache.h"
-#include "../Meshes/Mesh.h"
-#include "../Materials/Material.h"
+#include "../Resources/Mesh.h"
 
 namespace Enchine {
 
@@ -16,8 +14,7 @@ namespace Enchine {
 
     class SceneNode {
     private:
-        Material m_material;
-        Resource<Mesh> m_mesh;
+        Mesh m_mesh;
 
         // Transforms
         glm::mat4 m_transform;
@@ -31,10 +28,10 @@ namespace Enchine {
 
 
     public:
-        SceneNode(Material material, Resource<Mesh> mesh);
+        SceneNode(Mesh mesh);
 
-        Material& get_material() { return m_material; }
-        Mesh& get_mesh() { return *m_mesh; }
+        Material& get_material() { return m_mesh.get_material(); }
+        Geometry& get_geometry() { return m_mesh.get_geometry(); }
         glm::mat4 get_transform() const { return m_transform; }
 
         void set_transform(glm::mat4 transform) { m_transform = transform; }

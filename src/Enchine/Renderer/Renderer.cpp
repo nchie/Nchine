@@ -7,6 +7,7 @@
 #include <variant>
 #include "../Utilities/overloaded.h"
 #include "../Scene/SceneNode.h"
+#include "../Resources/Mesh.h"
 
 namespace Enchine {
 
@@ -57,7 +58,7 @@ namespace Enchine {
             {
                 for(int k = 0; k < 8*3; k++)
                 {
-                    auto& node1 = m_scene_list.emplace_back(stonewall, resource_lib.get_mesh("Cube"));
+                    auto& node1 = m_scene_list.emplace_back(Mesh(resource_lib.get_mesh("Cube"), stonewall));
                     node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
                 }
             }
@@ -69,7 +70,7 @@ namespace Enchine {
             {
                 for(int k = 5; k < 7; k++)
                 {
-                    auto& node1 = m_scene_list.emplace_back(container, resource_lib.get_mesh("Cube"));
+                    auto& node1 = m_scene_list.emplace_back(Mesh(resource_lib.get_mesh("Cube"), container));
                     node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
                 }
             }
@@ -81,7 +82,7 @@ namespace Enchine {
     void Renderer::render_command(const RenderCommand *command)
     {
         Material* material = command->material;
-        Mesh* mesh = command->mesh;
+        Geometry* mesh = command->mesh;
         Resource<ShaderProgram>& program = material->get_program();
 
 
@@ -122,7 +123,7 @@ namespace Enchine {
 
         for(auto& node : m_scene_list) {
             auto& material = node.get_material();
-            auto& mesh = node.get_mesh();
+            auto& mesh = node.get_geometry();
 
             m_render_commands.push_back(RenderCommand {
                     node.get_transform(),

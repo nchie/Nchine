@@ -11,7 +11,7 @@
 #include <optional>
 
 
-#include "../Materials/Texture2D.h"
+#include "../Resources/Texture2D.h"
 
 namespace Enchine {
 

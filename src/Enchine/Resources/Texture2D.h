@@ -5,10 +5,30 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
+#include <variant>
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+
+#include "../Resources/ResourceCache.h"
 
 namespace Enchine {
+
+    class Texture2D;
+
+    struct UniformValue {
+        typedef std::variant<bool, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat2, glm::mat3, glm::mat4> Type;
+        Type value;
+    };
+
+    struct UniformValueSampler
+    {
+        std::string temp_text;
+        unsigned int unit;
+        Resource<Texture2D> texture;
+    };
+
     class Texture2D {
     private:
         unsigned int m_id        = 0;
