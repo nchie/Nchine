@@ -176,7 +176,7 @@ namespace Enchine {
             }
         }
 
-        Resource<T> load(std::string name, T &&resource)
+        Resource<T> load(const std::string& name, T &&resource)
         /*TODO: requires !std::is_lvalue_reference<T>::value*/
         {
             auto resource_entry = m_indexmapping.find(name);

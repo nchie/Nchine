@@ -7,9 +7,9 @@
 
 namespace Enchine
 {
-    SceneNode::SceneNode(Mesh mesh) : m_mesh(std::move(mesh))
-    {
+    //SceneNode::SceneNode();
+    //{
 
-    }
+    //}
 
 }

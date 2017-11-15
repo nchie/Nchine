@@ -23,7 +23,7 @@ namespace Enchine {
                                                                                        {GL_COLOR_ATTACHMENT1, GL_HALF_FLOAT}})        // Normals
     {
         glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
 
         resource_lib.dummy_load();
 
@@ -51,15 +51,53 @@ namespace Enchine {
 
         /* TESTING ENDS HERE */
 
+        SceneNode cat_node = resource_lib.load_model("resources/objects/cat/cat.obj");
+        SceneNode cyborg_node = resource_lib.load_model("resources/objects/cyborg/cyborg.obj");
+        SceneNode nanosuit_node = resource_lib.load_model("resources/objects/nanosuit/nanosuit.obj");
+        SceneNode planet_node = resource_lib.load_model("resources/objects/planet/planet.obj");
+        SceneNode rock_node = resource_lib.load_model("resources/objects/rock/rock.obj");
 
-        for(int i = 0; i < 15*3; i++)
+        cat_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
+        m_scene_list.push_back(cat_node);
+
+        cyborg_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 0)));
+        m_scene_list.push_back(cyborg_node);
+
+        nanosuit_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(20, 0, 0)));
+        m_scene_list.push_back(nanosuit_node);
+
+        planet_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(30, 0, 0)));
+        m_scene_list.push_back(planet_node);
+
+        rock_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(40, 0, 0)));
+        m_scene_list.push_back(rock_node);
+
+
+        //test.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(1, 2, 1)));
+        //m_scene_list.push_back(test);
+
+        /*for(int i = 0; i < 40; i++)
+        {
+            for(int j = 0; j < 1; j++)
+            {
+                for(int k = 0; k < 40; k++)
+                {
+                    test.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i*0.7, j, k*1.5)));
+                    m_scene_list.push_back(test);
+                }
+            }
+        }*/
+
+        /*for(int i = 0; i < 15*3; i++)
         {
             for(int j = 0; j < 1; j++)
             {
                 for(int k = 0; k < 8*3; k++)
                 {
-                    auto& node1 = m_scene_list.emplace_back(Mesh(resource_lib.get_mesh("Cube"), stonewall));
-                    node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
+                    SceneNode node = SceneNode();
+                    node.add_mesh(Mesh(resource_lib.get_mesh("Cube"), stonewall));
+                    node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
+                    m_scene_list.push_back(node);
                 }
             }
         }
@@ -70,11 +108,13 @@ namespace Enchine {
             {
                 for(int k = 5; k < 7; k++)
                 {
-                    auto& node1 = m_scene_list.emplace_back(Mesh(resource_lib.get_mesh("Cube"), container));
-                    node1.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
+                    SceneNode node = SceneNode();
+                    node.add_mesh(Mesh(resource_lib.get_mesh("Cube"), container));
+                    node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(i, j, k)));
+                    m_scene_list.push_back(node);
                 }
             }
-        }
+        }*/
 
     }
 
@@ -122,17 +162,21 @@ namespace Enchine {
         m_render_commands = temp_render_commands;
 
         for(auto& node : m_scene_list) {
-            auto& material = node.get_material();
-            auto& mesh = node.get_geometry();
+            for(auto& mesh : node.get_meshes())
+            {
+                auto& material = mesh.get_material();
+                auto& geometry = mesh.get_geometry();
 
-            m_render_commands.push_back(RenderCommand {
-                    node.get_transform(),
-                    glm::mat4(1.0f), //PrevTransform?
-                    &mesh,
-                    &material,
-                    glm::vec3(1.0f),
-                    glm::vec3(1.0f)
-            });
+                m_render_commands.push_back(RenderCommand {
+                        node.get_transform(),
+                        glm::mat4(1.0f), //PrevTransform?
+                        &geometry,
+                        &material,
+                        glm::vec3(1.0f),
+                        glm::vec3(1.0f)
+                });
+            }
+
         }
 
         glEnable(GL_DEPTH_TEST); // TODO: Fix cache
@@ -208,7 +252,10 @@ namespace Enchine {
                 {3.9625, 2.85379, 3.14711},
                 {-4.51361, 1.33089, -0.222842},
                 {1.30545, -0.0861637, 0.226721},
-                {-0.0604437, 0.607219, -2.40954}
+                {-0.0604437, 0.607219, -2.40954},
+                {1.72264, 18.0076, 4.46697},
+                {-1.12315, 14.3657, 0.868386},
+                {20.7467, 13.1556, 0.767476}
 
         };
 

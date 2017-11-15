@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project(Renderer)
 
 set(CMAKE_CXX_STANDARD 17)
-set(LIBRARIES glfw3 dl Xrandr Xinerama Xxf86vm Xcursor X11 pthread assimp)
+set(LIBRARIES glfw3 dl Xrandr Xinerama Xxf86vm Xcursor X11 pthread assimp IrrXML z)
 
 include_directories(include)
 link_directories(lib)

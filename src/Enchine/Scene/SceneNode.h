@@ -14,7 +14,7 @@ namespace Enchine {
 
     class SceneNode {
     private:
-        Mesh m_mesh;
+        std::vector<Mesh> m_meshes;
 
         // Transforms
         glm::mat4 m_transform;
@@ -28,10 +28,14 @@ namespace Enchine {
 
 
     public:
-        SceneNode(Mesh mesh);
+        //SceneNode();
 
-        Material& get_material() { return m_mesh.get_material(); }
-        Geometry& get_geometry() { return m_mesh.get_geometry(); }
+        //Material& get_materials() const { return m_mesh.get_material(); }
+        //Geometry& get_geometrys() const { return m_mesh.get_geometry(); }
+
+        std::vector<Mesh>& get_meshes() { return m_meshes; }
+        void add_mesh(Mesh mesh) { m_meshes.push_back(mesh); }
+
         glm::mat4 get_transform() const { return m_transform; }
 
         void set_transform(glm::mat4 transform) { m_transform = transform; }

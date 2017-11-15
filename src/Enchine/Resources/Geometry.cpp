@@ -9,12 +9,12 @@
 
 namespace Enchine {
 
-    Geometry::Geometry(const std::vector<float> &vertice_data, const std::vector<int> &indices,
+    Geometry::Geometry(const std::vector<float> &vertice_data, const std::vector<unsigned int> &indices,
                std::bitset<ATTRIBUTE_COUNT> attributes) : m_attribute_data(attributes) {
         generate(vertice_data, indices);
     }
 
-    Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices) {
+    Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<unsigned int> &indices) {
         // Geometry with only vertices
         m_attribute_data = flags::none;
 
@@ -31,7 +31,7 @@ namespace Enchine {
     }
 
     Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
-               const std::vector<int> &indices) {
+               const std::vector<unsigned int> &indices) {
         // Geometry with vertices and texture coords
         m_attribute_data = flags::texcoords;
 
@@ -54,7 +54,7 @@ namespace Enchine {
     }
 
     Geometry::Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
-               const std::vector<glm::vec3> &normals, const std::vector<int> &indices) {
+               const std::vector<glm::vec3> &normals, const std::vector<unsigned int> &indices) {
         // Geometry with vertices, texture coords and normals
         m_attribute_data = flags::texcoords | flags::normals;
 
@@ -133,7 +133,7 @@ namespace Enchine {
     }
 
 
-    void Geometry::generate(const std::vector<float> &vertice_data, const std::vector<int> &indices) {
+    void Geometry::generate(const std::vector<float> &vertice_data, const std::vector<unsigned int> &indices) {
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
         glGenBuffers(1, &m_ebo);

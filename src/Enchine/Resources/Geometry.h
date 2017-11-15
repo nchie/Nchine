@@ -31,15 +31,15 @@ namespace Enchine {
         unsigned int m_indice_count = 0;
 
     public:
-        Geometry(const std::vector<float> &vertice_data, const std::vector<int> &indices,
+        Geometry(const std::vector<float> &vertice_data, const std::vector<unsigned int> &indices,
              std::bitset<ATTRIBUTE_COUNT> attributes);
 
-        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<int> &indices);
+        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<unsigned int> &indices);
 
-        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv, const std::vector<int> &indices);
+        Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv, const std::vector<unsigned int> &indices);
 
         Geometry(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec2> &uv,
-             const std::vector<glm::vec3> &normals, const std::vector<int> &indices);
+             const std::vector<glm::vec3> &normals, const std::vector<unsigned int> &indices);
 
         ~Geometry();
 
@@ -62,7 +62,7 @@ namespace Enchine {
         void draw() const; //TODO: Remove
 
     private:
-        void generate(const std::vector<float> &vertice_data, const std::vector<int> &indices);
+        void generate(const std::vector<float> &vertice_data, const std::vector<unsigned int> &indices);
         int get_stride() const;
 
     public: //Getters and setters

@@ -143,7 +143,7 @@ static const std::vector<glm::vec2> cube_texcoords {
 };
 
 
-static const std::vector<int> cube_indices {
+static const std::vector<unsigned int> cube_indices {
         0, 1, 2,
         3, 4, 5,
         6, 7, 8,

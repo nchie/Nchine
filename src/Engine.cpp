@@ -33,8 +33,8 @@ void Engine::init() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-    m_window = glfwCreateWindow(m_window_width, m_window_height, m_window_title.c_str(), NULL, NULL);
-    if (m_window == NULL)
+    m_window = glfwCreateWindow(m_window_width, m_window_height, m_window_title.c_str(), nullptr, nullptr);
+    if (m_window == nullptr)
     {
         glfwTerminate();
         throw std::exception(); // Failed to create GLFW window

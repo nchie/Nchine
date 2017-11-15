@@ -9,6 +9,7 @@
 #include <assimp/scene.h>
 
 #include "ResourceCache.h"
+
 #include "Texture2D.h"
 #include "Geometry.h"
 #include "Mesh.h"
@@ -17,17 +18,20 @@
 
 
 namespace Enchine {
+
+    class ResourceLibrary;
+
     class ModelLoader {
 
     private:
-        ResourceCache<Texture2D> *m_texture_cache;
-        ResourceCache<Geometry> *m_geometry_cache;
+        ResourceLibrary *m_library;
+        //ResourceCache<Texture2D> *m_texture_cache;
+        //ResourceCache<Geometry> *m_geometry_cache;
 
     public:
-        ModelLoader(ResourceCache<Texture2D> *texture_cache, ResourceCache<Geometry> *geometry_cache) : m_texture_cache(texture_cache),
-                                                                                                      m_geometry_cache(geometry_cache) { }
+        ModelLoader(ResourceLibrary *resource_library);
         SceneNode load_model(std::string path);
-        SceneNode process_node(aiNode* aNode, const aiScene *aScene, std::string directory_path);
+        SceneNode process_node(aiNode* aNode, const aiScene *aScene, std::string path);
 
         Geometry load_geometry(aiMesh* aMesh, const aiScene* aScene);
 
