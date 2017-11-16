@@ -122,16 +122,16 @@ void Engine::mouse_callback(double xpos, double ypos) {
     double x_offset = (xpos - m_lastX) * sensitivity;
     double y_offset = (m_lastY - ypos) * sensitivity;
 
-    std::cout << "x offset:" << x_offset << std::endl;
-    std::cout << "y offset:" << y_offset << std::endl;
+    //std::cout << "x offset:" << x_offset << std::endl;
+    //std::cout << "y offset:" << y_offset << std::endl;
 
     auto& camera = m_renderer->get_camera();
 
     float yaw = camera.get_yaw();
     float pitch = camera.get_pitch();
 
-    std::cout << "yaw:" << yaw << std::endl;
-    std::cout << "pitch:" << pitch << std::endl;
+    //std::cout << "yaw:" << yaw << std::endl;
+    //std::cout << "pitch:" << pitch << std::endl;
 
     yaw += x_offset;
     pitch += y_offset;

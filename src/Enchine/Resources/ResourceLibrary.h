@@ -10,6 +10,8 @@
 #include "Texture2D.h"
 #include "Geometry.h"
 #include "ModelLoader.h"
+#include "TextureLoader.h"
+#include "BinaryLoader.h"
 
 
 
@@ -30,6 +32,9 @@ namespace Enchine
         ResourceCache<Texture2D>     m_texture_cache;
         ResourceCache<Geometry>      m_geometry_cache;
         ResourceLoader               m_resource_loader;
+        TextureLoader                m_texture_loader;
+
+
         ModelLoader                  m_model_loader;
 
 
@@ -44,9 +49,9 @@ namespace Enchine
         Resource<Texture2D> get_texture(std::string name);
         Resource<Geometry> get_mesh(std::string name);
 
-        Resource<ShaderProgram> load_shader(const std::string& name, ShaderProgram&& shader) { return m_shader_cache.load(name, std::move(shader)); }
-        Resource<Texture2D> load_texture(const std::string& name, Texture2D&& texture) { return m_texture_cache.load(name, std::move(texture)); }
-        Resource<Geometry> load_geometry(const std::string& name, Geometry&& geometry) { return m_geometry_cache.load(name, std::move(geometry)); }
+        Resource<ShaderProgram> store_shader(const std::string &name, ShaderProgram &&shader) { return m_shader_cache.load(name, std::move(shader)); }
+        Resource<Texture2D> store_texture(const std::string &name, Texture2D &&texture) { return m_texture_cache.load(name, std::move(texture)); }
+        Resource<Geometry> store_geometry(const std::string &name, Geometry &&geometry) { return m_geometry_cache.load(name, std::move(geometry)); }
 
         SceneNode load_model(const std::string& path) { return m_model_loader.load_model(path); }
 

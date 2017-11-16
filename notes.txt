@@ -1,0 +1,48 @@
+
+ -----------------
+| RESOURCE SYSTEM |
+ -----------------
+
+Classes:
+    * Geometry: holds and manages everything needed to render a geometry: VAO, VBO, EBO.
+    * Texture: holds and manages a texture which is loaded into the GPU.
+    * Shader: holds and manages a shader which is loaded into the GPU.
+
+    * Material: holds a shader resource, multiple texture resources, as well as uniform settings.
+    * Mesh: holds a geometry and a material.
+    * Model: holds multiple meshes, possibly in a tree structure to more easily support skinning later on?
+
+    * ResourceCache<T>: T can be any resource loaded into the GPU. It owns these resources and only hands out handles to
+                        them on request (currently string identifiers are used when requesting handles, but all resources
+                        are stored in a vector and each handle only contains resource's index in that vector)
+    * Resource<T>:      The handles given out from ResourceCache. The handles are reference counted and to get the
+                        underlying resource you simply deference like with pointers (*handle).
+
+
+
+
+
+
+XMLs documents:
+    * Resources.xml for ref-counted resources (geometry, shaders, textures)
+        - Resources are assigned names and resource files, and possibly some attributes
+        - Are reference counted using ResourceCache<T>
+
+    * Assets.xml for assets using the resources (materials, meshes, models)
+        - Assets are not reference counted, but they hold handles to ref-counted resources.
+
+Both XMLs are loaded into memory (possibly with class called Resource/AssetDefinitions containing entries in std::maps?)
+
+
+Factory classes for resources:
+For example, a texture factory could contain the texture definitions from the XML containing data about textures in the game,
+as well as a cache containing all loaded textures. This means it has mappings from each name/id to a file and when asked
+to load a texture with a name/id, it can look up its path and use a "BinaryLoader" to either load it directly, or
+asynchronously load the binary data into a queue which then can be read from later to create the resources synchronously
+in the GL context. These factories only return handles.
+
+Factory classes for assets:
+Much like for resources, these classes contain the definitions for the assets they can load. For example, with the
+definition the MaterialFactory will know which shader, textures and possibly uniform a certain material has, and with
+the help of TextureFactory and ShaderFactory, it can retrieve handles to the resources it needs (Shader + Textures),
+setup (uniforms), and return an instance of requested material. These factories return actual instances, not handles!

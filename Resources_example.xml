@@ -7,7 +7,7 @@
         <VertexAttributes>
             <Attribute id="color" />
             <Attribute id="texcoord" />
-            <Attribute id="colnormalsor" />
+            <Attribute id="normals" />
             <Attribute id="skin" />
         </VertexAttributes>
 

@@ -4,16 +4,16 @@
 
 #include "ModelLoader.h"
 
+#include <string>
+
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
 #include "ResourceLibrary.h"
 
-#ifndef STB_IMAGE_IMPLEMENTATION // TODO: Remove
-#include <stb_image.h> // TODO: Remove
-#endif
 
-#include <string>
+#include "TextureLoader.h"
+
 
 
 namespace Enchine {
@@ -52,7 +52,7 @@ namespace Enchine {
             //assimpMesh->mMaterialIndex
 
             Material mat1 = m_library->get_shader("DeferredGeometryShader");
-            Resource<Geometry> r_geometry = m_library->load_geometry(path+std::to_string(i), std::move(geometry));
+            Resource<Geometry> r_geometry = m_library->store_geometry(path + std::to_string(i), std::move(geometry));
 
             aiMaterial *aMaterial = aScene->mMaterials[assimpMesh->mMaterialIndex];
 
@@ -70,19 +70,15 @@ namespace Enchine {
             std::string spec_texture_name = std::string(file.C_Str());
 
 
+            TextureLoader loader;
 
-            data = stbi_load((directory + dif_texture_name).c_str(), &width, &height, &nr_channels, 0);
-            format = (nr_channels == 3) ? GL_RGB : GL_RGBA;
-            m_library->load_texture(directory + dif_texture_name + std::to_string(i), Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, format, GL_UNSIGNED_BYTE));
-            stbi_image_free(data);
+            auto diffuse = m_library->store_texture(directory + dif_texture_name,
+                                                    loader.load(directory + dif_texture_name));
+            auto specular = m_library->store_texture(directory + spec_texture_name,
+                                                     loader.load(directory + spec_texture_name));
 
-            data = stbi_load((directory + spec_texture_name).c_str(), &width, &height, &nr_channels, 0);
-            format = (nr_channels == 3) ? GL_RGB : GL_RGBA;
-            m_library->load_texture(directory + spec_texture_name + std::to_string(i), Texture2D(reinterpret_cast<std::byte*>(data), width, height, GL_RGBA, format, GL_UNSIGNED_BYTE));
-            stbi_image_free(data);
-
-            mat1.set_texture("texture_diffuse1", m_library->get_texture(directory + dif_texture_name + std::to_string(i)));
-            mat1.set_texture("texture_specular1", m_library->get_texture(directory + spec_texture_name + std::to_string(i)));
+            mat1.set_texture("texture_diffuse1", diffuse);
+            mat1.set_texture("texture_specular1", specular);
 
             node.add_mesh(Mesh(r_geometry, mat1));
         }
