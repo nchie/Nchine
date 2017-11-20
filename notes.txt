@@ -20,9 +20,6 @@ Classes:
 
 
 
-
-
-
 XMLs documents:
     * Resources.xml for ref-counted resources (geometry, shaders, textures)
         - Resources are assigned names and resource files, and possibly some attributes
@@ -46,3 +43,60 @@ Much like for resources, these classes contain the definitions for the assets th
 definition the MaterialFactory will know which shader, textures and possibly uniform a certain material has, and with
 the help of TextureFactory and ShaderFactory, it can retrieve handles to the resources it needs (Shader + Textures),
 setup (uniforms), and return an instance of requested material. These factories return actual instances, not handles!
+
+
+
+
+
+
+
+
+
+
+Binary files:
+Geometry files:
+    4b              magic identifier
+    2b              version
+    2b?
+
+    4b              joint count
+    count x size    joints
+
+    4b              vertice count
+    2b              vertex format?
+    2b              vertex size?
+    count x size    vertices
+
+    4b              indice count
+    count x size    indices
+
+
+Texture files:
+    4b              magic identifier
+    2b              version
+    1b              channels
+    1b              compression
+    4b              size
+    size            data
+
+
+Shader files:
+    4b              magic identifier
+    2b              version
+    1b              shader flags
+    1b?
+    4b              vertex shader size
+    vs size         vertex shader code
+    4b              tesselation shader size
+    ts size         tesselation shader code
+    4b              geometry shader size
+    gs size         geometry shader code
+    4b              fragment shader size
+    fs size         fragment shader code
+
+
+
+./Resources/ contains the following folders:
+Shaders: Contains sh
+Geometry/
+Models/
