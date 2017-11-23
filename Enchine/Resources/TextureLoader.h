@@ -19,7 +19,7 @@ namespace Enchine {
 
     private:
         std::queue<std::vector<std::byte> > m_to_be_loaded;
-        BinaryLoader loader;
+        BinaryLoader m_binary_loader;
 
 
     public:

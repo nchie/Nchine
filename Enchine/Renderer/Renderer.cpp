@@ -14,13 +14,14 @@ namespace Enchine {
 
     class GLFWwindow;
 
-    Renderer::Renderer(int width, int height) :    m_width(width),
-                                                   m_height(height),
-                                                   m_default_target(m_width, m_height),
-                                                   m_active_target(&m_default_target),
-                                                   m_ssao_target(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}}),
-                                                   m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE},      // DiffuseSpecular
-                                                                                       {GL_COLOR_ATTACHMENT1, GL_HALF_FLOAT}})        // Normals
+    Renderer::Renderer(GLADloadproc load_proc, int width, int height) :    glcontext(load_proc),
+                                                                           m_width(width),
+                                                                           m_height(height),
+                                                                           m_default_target(m_width, m_height),
+                                                                           m_active_target(&m_default_target),
+                                                                           m_ssao_target(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE}}),
+                                                                           m_gbuffer(m_width, m_height, true, {{GL_COLOR_ATTACHMENT0, GL_UNSIGNED_BYTE},      // DiffuseSpecular
+                                                                                                               {GL_COLOR_ATTACHMENT1, GL_HALF_FLOAT}})        // Normals
     {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
@@ -116,6 +117,10 @@ namespace Enchine {
             }
         }*/
 
+    }
+
+    void Renderer::set_viewport(int width, int height) {
+        glViewport(0, 0, width, height);
     }
 
 
@@ -297,6 +302,5 @@ namespace Enchine {
         );
         //glBindFramebuffer(GL_FRAMEBUFFER, dst.get_id()); // TODO: Should this really bind to the default fb?
     }
-
 
 }

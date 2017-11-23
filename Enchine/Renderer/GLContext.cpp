@@ -10,6 +10,13 @@
 
 namespace Enchine {
 
+    GLContext::GLContext(GLADloadproc load_proc) {
+        if (!gladLoadGLLoader(load_proc))
+        {
+            throw std::exception();  //Failed to initialize GLAD
+        }
+    }
+
     void GLContext::use_program(const ShaderProgram &program) {
         if (m_active_program != program.get_id()) {
             glUseProgram(program.get_id());

@@ -5,7 +5,6 @@
 #pragma once
 
 #include "ResourceCache.h"
-#include "ResourceLoader.h"
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 #include "Geometry.h"
@@ -31,7 +30,6 @@ namespace Enchine
         ResourceCache<ShaderProgram> m_shader_cache;
         ResourceCache<Texture2D>     m_texture_cache;
         ResourceCache<Geometry>      m_geometry_cache;
-        ResourceLoader               m_resource_loader;
         TextureLoader                m_texture_loader;
 
 

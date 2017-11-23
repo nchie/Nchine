@@ -12,7 +12,7 @@
 
 
 void Enchine::TextureLoader::load_async(const std::string& path) {
-    loader.load_file_async(path, [&](std::vector<std::byte>&& file_content){ m_to_be_loaded.push(std::move(file_content)); });
+    m_binary_loader.load_file_async(path, [&](std::vector<std::byte>&& file_content){ m_to_be_loaded.push(std::move(file_content)); });
 }
 
 Enchine::Texture2D Enchine::TextureLoader::load(const std::string& path) {
@@ -21,7 +21,7 @@ Enchine::Texture2D Enchine::TextureLoader::load(const std::string& path) {
     int width, height, nr_channels;
     GLenum format;
 
-    std::vector<std::byte> image_data = loader.load_file(path);
+    std::vector<std::byte> image_data = m_binary_loader.load_file(path);
 
     // Wrap in a unique_ptr
     auto data = std::unique_ptr<unsigned char>(stbi_load_from_memory(reinterpret_cast<unsigned char*>(image_data.data()), image_data.size(), &width, &height, &nr_channels, 0));

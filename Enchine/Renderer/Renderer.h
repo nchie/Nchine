@@ -66,8 +66,10 @@ namespace Enchine {
         void render_command(const RenderCommand* command /*TODO: Camera */);
 
     public:
-        Renderer(int width, int height);
+        Renderer(GLADloadproc load_proc, int width, int height);
         ~Renderer() = default;
+
+        void set_viewport(int width, int height);
 
         void set_target(RenderTarget& render_target, GLenum target = GL_TEXTURE_2D);
         RenderTarget& get_active_render_target();

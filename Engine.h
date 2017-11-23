@@ -42,6 +42,7 @@ public:
 
     void mouse_button_callback(int button, int action, int mods);
     void mouse_callback(double xpos, double ypos);
+    void framebuffer_size_callback(int width, int height);
 
 private:
     void processInput();
@@ -50,8 +51,3 @@ private:
 
 };
 
-
-// GLFW callback-forwarding
-void mouse_button_forward_callback(GLFWwindow* window, int button, int action, int mods);
-void mouse_forward_callback(GLFWwindow* window, double xpos, double ypos);
-void framebuffer_size_forward_callback(GLFWwindow* window, int width, int height);

@@ -4,7 +4,6 @@
 
 #include "Engine.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <exception>
@@ -17,9 +16,8 @@ Engine::Engine(std::string title, int window_width, int window_height) :  m_wind
 }
 
 Engine::~Engine() {
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
-    m_renderer.release(); // If renderer stays alive longer than glfwTerminate, render will try to deallocate GL objects after glfw have terminated = SIGSEGV!
+    // If renderer stays alive longer than glfwTerminate, renderer will try to deallocate GL objects after glfw have terminated = SIGSEGV!
+    m_renderer.release();
     glfwTerminate();
 }
 
@@ -41,21 +39,17 @@ void Engine::init() {
     }
 
     glfwMakeContextCurrent(m_window);
-    glfwSetFramebufferSizeCallback(m_window, framebuffer_size_forward_callback);
-    glfwSetMouseButtonCallback(m_window, mouse_button_forward_callback);
-    glfwSetCursorPosCallback(m_window, mouse_forward_callback);
+
+    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){ reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window))->framebuffer_size_callback(width, height); });
+    glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods){ reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window))->mouse_button_callback(button, action, mods); });
+    glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos){reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window))->mouse_callback(xpos, ypos); });
+
     //glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetWindowUserPointer(m_window, this);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        throw std::exception();  //Failed to initialize GLAD
-    }
 
-    m_renderer = std::make_unique<Enchine::Renderer>(m_window_width, m_window_height);
+    m_renderer = std::make_unique<Enchine::Renderer>((GLADloadproc)glfwGetProcAddress, m_window_width, m_window_height);
 }
 
 void Engine::loop() {
@@ -149,13 +143,10 @@ void Engine::mouse_callback(double xpos, double ypos) {
     m_lastY = ypos;
 }
 
-void framebuffer_size_forward_callback(GLFWwindow* window, int width, int height)
-{
-    auto* engine = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+void Engine::framebuffer_size_callback(int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    m_renderer->set_viewport(width, height);
+
 }
 
-void mouse_button_forward_callback(GLFWwindow* window, int button, int action, int mods) { reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window))->mouse_button_callback(button, action, mods);}
-void mouse_forward_callback(GLFWwindow* window, double xpos, double ypos) { reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window))->mouse_callback(xpos, ypos);}

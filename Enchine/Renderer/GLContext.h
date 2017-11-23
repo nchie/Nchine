@@ -20,6 +20,8 @@ namespace Enchine {
         GLuint m_active_vao = 0;
 
     public:
+        GLContext(GLADloadproc load_proc);
+
         void use_program(const ShaderProgram& program);
         void bind_texture(unsigned int unit, const Texture2D& texture);
         void draw_mesh(const Geometry& mesh);
