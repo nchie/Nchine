@@ -15,7 +15,7 @@ namespace Enchine {
     private:
 
     public:
-        TextureFactory(BinaryLoader *binary_loader, ResourceCache<Texture2D> *cache) : BaseFactory<Texture2D>(binary_loader, cache) { }
+        TextureFactory(BinaryFileLoader *binary_loader, ResourceCache<Texture2D> *cache) : BaseFactory<Texture2D>(binary_loader, cache) { }
 
         Resource<Texture2D> load(const std::string& path);
         void load_async(const std::string& path);

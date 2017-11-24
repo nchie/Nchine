@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "BinaryLoader.h"
+#include "BinaryFileLoader.h"
 
 namespace Enchine {
 
@@ -16,11 +16,11 @@ namespace Enchine {
 
     protected:
         ResourceCache<T> *m_cache;
-        BinaryLoader *m_binary_loader;
+        BinaryFileLoader *m_binary_loader;
 
 
     public:
-        BaseFactory(BinaryLoader *binary_loader, ResourceCache<T> *cache) : m_binary_loader(binary_loader),
+        BaseFactory(BinaryFileLoader *binary_loader, ResourceCache<T> *cache) : m_binary_loader(binary_loader),
                                                                             m_cache(cache) { }
 
 

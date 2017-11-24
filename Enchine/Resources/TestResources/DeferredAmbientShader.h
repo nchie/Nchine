@@ -62,6 +62,6 @@ const char *fragmentDeferredAmbientShader =
         "  vec3  diffuse        = texture(gDiffuseSpecular, TexCoords).rgb;\n"
         "  float specular       = texture(gDiffuseSpecular, TexCoords).a;\n"
         "  \n"
-        "  FragColor            = diffuse * 0.04;\n"
+        "  FragColor            = diffuse * 0.1;\n"
         "}";
 

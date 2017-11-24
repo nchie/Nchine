@@ -25,7 +25,7 @@ namespace Enchine {
     SceneNode ModelLoader::load_model(std::string path) {
         Assimp::Importer importer;
 
-        const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph);
+        const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph | aiProcess_OptimizeMeshes);
 
         if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
@@ -37,7 +37,7 @@ namespace Enchine {
         return process_node(scene->mRootNode, scene, path);
     }
 
-    SceneNode ModelLoader::process_node(aiNode* aNode, const aiScene *aScene, std::string path) {
+    SceneNode ModelLoader::process_node(aiNode* aNode, const aiScene *aScene, const std::string& path) {
 
         std::string directory = path.substr(0, path.find_last_of('/')+1);
         std::string file_name = path.substr(path.find_last_of('/')+1, path.length());
@@ -72,10 +72,8 @@ namespace Enchine {
 
             TextureLoader loader;
 
-            auto diffuse = m_library->store_texture(directory + dif_texture_name,
-                                                    loader.load(directory + dif_texture_name));
-            auto specular = m_library->store_texture(directory + spec_texture_name,
-                                                     loader.load(directory + spec_texture_name));
+            auto diffuse = m_library->store_texture(directory + dif_texture_name);
+            auto specular = m_library->store_texture(directory + spec_texture_name);
 
             mat1.set_texture("texture_diffuse1", diffuse);
             mat1.set_texture("texture_specular1", specular);
@@ -91,6 +89,7 @@ namespace Enchine {
 
         return node;
     }
+
 
 
     Geometry ModelLoader::load_geometry(aiMesh* aMesh, const aiScene* aScene) {

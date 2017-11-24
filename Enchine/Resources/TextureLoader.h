@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <string>
 
-#include "BinaryLoader.h"
+#include "BinaryFileLoader.h"
 #include "Texture2D.h"
 
 
@@ -19,7 +19,7 @@ namespace Enchine {
 
     private:
         std::queue<std::vector<std::byte> > m_to_be_loaded;
-        BinaryLoader m_binary_loader;
+        BinaryFileLoader m_binary_loader;
 
 
     public:

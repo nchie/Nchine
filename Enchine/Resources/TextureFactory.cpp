@@ -14,7 +14,7 @@ Enchine::Resource<Enchine::Texture2D> Enchine::TextureFactory::load(const std::s
     int width, height, nr_channels;
     GLenum format;
 
-    std::vector<std::byte> image_data = m_binary_loader->load_file(path);
+    std::vector<std::byte> image_data = m_binary_loader->load_binary(path);
 
     // Wrap in a unique_ptr
     auto data = std::unique_ptr<unsigned char>(stbi_load_from_memory(reinterpret_cast<unsigned char*>(image_data.data()), image_data.size(), &width, &height, &nr_channels, 0));

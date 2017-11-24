@@ -57,6 +57,7 @@ namespace Enchine {
         SceneNode nanosuit_node = resource_lib.load_model("resources/objects/nanosuit/nanosuit.obj");
         SceneNode planet_node = resource_lib.load_model("resources/objects/planet/planet.obj");
         SceneNode rock_node = resource_lib.load_model("resources/objects/rock/rock.obj");
+        SceneNode pirate_node = resource_lib.load_model("resources/objects/pirate/pirate.dae");
 
         cat_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
         m_scene_list.push_back(cat_node);
@@ -67,10 +68,13 @@ namespace Enchine {
         nanosuit_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(20, 0, 0)));
         m_scene_list.push_back(nanosuit_node);
 
-        planet_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(30, 0, 0)));
+        pirate_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(30, 0, 0)));
+        m_scene_list.push_back(pirate_node);
+
+        planet_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(40, 0, 0)));
         m_scene_list.push_back(planet_node);
 
-        rock_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(40, 0, 0)));
+        rock_node.set_transform(glm::translate(glm::mat4(1.0f), glm::vec3(50, 0, 0)));
         m_scene_list.push_back(rock_node);
 
 

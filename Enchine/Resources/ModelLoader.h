@@ -31,7 +31,7 @@ namespace Enchine {
     public:
         ModelLoader(ResourceLibrary *resource_library);
         SceneNode load_model(std::string path);
-        SceneNode process_node(aiNode* aNode, const aiScene *aScene, std::string path);
+        SceneNode process_node(aiNode* aNode, const aiScene *aScene, const std::string& path);
 
         Geometry load_geometry(aiMesh* aMesh, const aiScene* aScene);
 
