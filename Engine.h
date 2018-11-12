@@ -7,8 +7,8 @@
 #include <string>
 #include <memory>
 
-#include "Enchine/Renderer/Renderer.h"
-#include "Enchine/Renderer/Renderer.h"
+#include "Nchine/Renderer/Renderer.h"
+#include "Nchine/Renderer/Renderer.h"
 
 class GLFWwindow;
 
@@ -22,7 +22,7 @@ private:
     int m_window_height;
     std::string m_window_title;
 
-    std::unique_ptr<Enchine::Renderer> m_renderer;
+    std::unique_ptr<Nchine::Renderer> m_renderer;
 
 
     // TODO: Remove these?

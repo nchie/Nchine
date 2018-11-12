@@ -49,7 +49,7 @@ void Engine::init() {
     glfwSetWindowUserPointer(m_window, this);
 
 
-    m_renderer = std::make_unique<Enchine::Renderer>((GLADloadproc)glfwGetProcAddress, m_window_width, m_window_height);
+    m_renderer = std::make_unique<Nchine::Renderer>((GLADloadproc)glfwGetProcAddress, m_window_width, m_window_height);
 }
 
 void Engine::loop() {
